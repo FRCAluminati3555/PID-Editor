@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.chart.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="663.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <LineChart id="lineChart" layoutX="14.0" layoutY="7.0" prefHeight="481.0" prefWidth="874.0" title="Test">
+        <xAxis>
+          <NumberAxis label="Ticks" side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis label="RPM" side="LEFT" />
+        </yAxis>
+      </LineChart>
+      <Button id="go" layoutX="416.0" layoutY="486.0" mnemonicParsing="false" text="Go">
+         <font>
+            <Font size="20.0" />
+         </font></Button>
+      <TextField id="field" layoutX="109.0" layoutY="507.0" />
+      <TextField id="p" layoutX="109.0" layoutY="547.0" />
+      <Label layoutX="21.0" layoutY="508.0" text="SetPoint">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <TextField id="i" layoutX="109.0" layoutY="588.0" />
+      <TextField id="d" layoutX="109.0" layoutY="627.0" />
+      <Label layoutX="85.0" layoutY="547.0" text="P">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="86.0" layoutY="588.0" text="I">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="81.0" layoutY="627.0" text="D">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label layoutX="309.0" layoutY="547.0" text="Allocated Point #: ">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Label id="pointLabel" layoutX="470.0" layoutY="546.0" prefHeight="31.0" prefWidth="67.0">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Label>
+      <Button id="sync" layoutX="493.0" layoutY="488.0" mnemonicParsing="false" text="Sync Data">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
+   </children>
+</Pane>
