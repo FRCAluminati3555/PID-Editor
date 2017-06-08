@@ -36,10 +36,11 @@ public class Grapher extends Application {
 		
     	stage.setTitle("Line Chart");
     	
-    	Parent root = FXMLLoader.load(getClass().getResource("/UI.fxml"));
+    	Parent root = FXMLLoader.load(getClass().getResource("/fxml/UI.fxml"));
     	Scene scene = new Scene(root);
     	
     	LineChart<Number, Number> lineChart = (LineChart<Number, Number>) scene.lookup("#lineChart");
+    	lineChart.setAnimated(false);
     	
     	Button b = (Button) (scene.lookup("#go"));
     	b.setOnAction(event -> {
@@ -49,10 +50,10 @@ public class Grapher extends Application {
     	TextField t = (TextField) (scene.lookup("#field"));
     	t.setText(Double.toString(reader.getSetPoint()));
     	t.textProperty().addListener((observable, oldValue, newValue) -> {
-    		int a;
+    		Double a;
     		
     		try{
-    			a = Integer.valueOf(newValue);
+    			a = Double.valueOf(newValue);
     		}
     		catch(NumberFormatException e){
     			return;
@@ -71,15 +72,42 @@ public class Grapher extends Application {
     	d.setText(Double.toString(reader.getD()));
     	
     	p.textProperty().addListener((observable, oldValue, newValue) -> {
-    		reader.setP(Double.valueOf(newValue));
+    		Double a;
+    		
+    		try{
+    			a = Double.valueOf(newValue);
+    		}
+    		catch(NumberFormatException e){
+    			return;
+    		}
+    		
+    		reader.setP(a);
     	});
     	
     	i.textProperty().addListener((observable, oldValue, newValue) -> {
-    		reader.setI(Double.valueOf(newValue));
+    		Double a;
+    		
+    		try{
+    			a = Double.valueOf(newValue);
+    		}
+    		catch(NumberFormatException e){
+    			return;
+    		}
+    		
+    		reader.setI(a);
     	});
     	
     	d.textProperty().addListener((observable, oldValue, newValue) -> {
-    		reader.setD(Double.valueOf(newValue));
+    		Double a;
+    		
+    		try{
+    			a = Double.valueOf(newValue);
+    		}
+    		catch(NumberFormatException e){
+    			return;
+    		}
+    		
+    		reader.setD(a);
     	});
     	
     	Label l = (Label) (scene.lookup("#pointLabel"));
@@ -136,6 +164,8 @@ public class Grapher extends Application {
     }
 	
 	public void update(double value, double setPoint){
+//		value = Math.random() * 10;
+		
 		if(going){
 			series.getData().add(new Data<Number, Number>(x, value));
 			setPointSeries.getData().add(new Data<Number, Number>(x, setPoint));
