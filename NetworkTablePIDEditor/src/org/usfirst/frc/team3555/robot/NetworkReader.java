@@ -30,10 +30,15 @@ public class NetworkReader implements ITableListener {
 	public void setI(double i){table.putNumber("i", i);}
 	public void setD(double d){table.putNumber("d", d);}
 	public void setSetPoint(double point){table.putNumber("setPoint", point);}
+	public void setEnabled(boolean enabled){table.putBoolean("Talon Enabled", enabled);}
+	public void setPIDDataSyncRequested(boolean requested){table.putBoolean("toSync", requested);}
 	
 	public double getP(){return (double) table.getNumber("p", 0);}
 	public double getI(){return (double) table.getNumber("i", 0);}
 	public double getD(){return (double) table.getNumber("d", 0);}
 	public double getValue(){return (double) table.getNumber("value", 0);}
 	public double getSetPoint(){return (double) table.getNumber("setPoint", 0);}
+	public boolean isTalonEnabled(){return table.getBoolean("Talon Enabled", false);}
+	public boolean isRobotEnabled(){return table.getBoolean("Robot Enabled", false);}
+	public boolean isPIDDataSyncRequested(){return table.getBoolean("toSync", false);}
 }
