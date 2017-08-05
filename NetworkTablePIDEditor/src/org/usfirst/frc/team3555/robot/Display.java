@@ -27,14 +27,16 @@ public class Display extends Application {
     	Parent root = FXMLLoader.load(getClass().getResource("/fxml/UI.fxml"));
     	scene = new Scene(root);
 		
-    	handler = new Handler(stage, scene);
-    	
 		reader = new NetworkReader();
 		reader.setEnabled(false);
 		
+		handler = new Handler(this, stage, scene, reader);
 		grapher = new CANTalonGrapher(handler, reader);
     	
     	handler.getEnableButton().setOnAction(event -> {
+    		if(handler.getSquareWaveMonitor().isMonitoring())
+    			handler.getSquareWaveMonitor().end();
+    		
 //    		if(reader.isRobotEnabled()){
 				grapher.alternateState();
 				
@@ -54,6 +56,9 @@ public class Display extends Application {
     	
     	handler.getSetPointField().setText(Double.toString(reader.getSetPoint()));
     	handler.getSetPointField().textProperty().addListener((observable, oldValue, newValue) -> {
+    		if(handler.getSquareWaveMonitor().isMonitoring())
+    			handler.getSquareWaveMonitor().end();
+    		
     		Double a;
     		
     		try{
@@ -71,6 +76,9 @@ public class Display extends Application {
     	handler.getdField().setText(Double.toString(reader.getD()));
     	
     	handler.getpField().textProperty().addListener((observable, oldValue, newValue) -> {
+    		if(handler.getSquareWaveMonitor().isMonitoring())
+    			handler.getSquareWaveMonitor().end();
+    		
     		Double a;
     		
     		try{
@@ -84,6 +92,9 @@ public class Display extends Application {
     	});
     	
     	handler.getiField().textProperty().addListener((observable, oldValue, newValue) -> {
+    		if(handler.getSquareWaveMonitor().isMonitoring())
+    			handler.getSquareWaveMonitor().end();
+    		
     		Double a;
     		
     		try{
@@ -97,6 +108,9 @@ public class Display extends Application {
     	});
     	
     	handler.getdField().textProperty().addListener((observable, oldValue, newValue) -> {
+    		if(handler.getSquareWaveMonitor().isMonitoring())
+    			handler.getSquareWaveMonitor().end();
+    		
     		Double a;
     		
     		try{
@@ -109,12 +123,49 @@ public class Display extends Application {
     		reader.setD(a);
     	});
     	
+    	handler.getSquareSetPoint1Field().textProperty().addListener((observable, oldValue, newValue) -> {
+    		if(handler.getSquareWaveMonitor().isMonitoring())
+    			handler.getSquareWaveMonitor().start();
+    	});
+    	
+    	handler.getSquareSetPoint2Field().textProperty().addListener((observable, oldValue, newValue) -> {
+    		if(handler.getSquareWaveMonitor().isMonitoring())
+    			handler.getSquareWaveMonitor().start();
+    	});
+    	
+    	handler.getFrequencyField().textProperty().addListener((observable, oldValue, newValue) -> {
+    		if(handler.getSquareWaveMonitor().isMonitoring())
+    			handler.getSquareWaveMonitor().start();
+    	});
+    	
     	handler.getScaleLabel().setText(Integer.toString(grapher.getScale()));
+    	
+    	handler.getSquareWaveButton().setOnAction(e -> {
+    		//End Square Wave
+    		if(handler.getSquareWaveMonitor().isMonitoring()) {
+    			handler.getSquareWaveMonitor().end();
+    			handler.getEnableButton().fire();
+
+    			double set;
+    			
+    			try {
+    				set = Double.valueOf(handler.getSetPointField().getText());
+    			} catch(NumberFormatException ex) {
+    				set = 0;
+    			}
+    			
+    			reader.setSetPoint(set);
+    		} else { //Start Square Wave
+				handler.getSquareWaveMonitor().start();
+//				handler.getSquareWaveButton().setText("End Square Wave");
+    		}
+    	});
     	
     	Timeline gameLoop = new Timeline();
         gameLoop.setCycleCount(Timeline.INDEFINITE);
         
         gameLoop.getKeyFrames().add(new KeyFrame(Duration.seconds(.1), event -> {
+        	handler.getSquareWaveMonitor().update();
         	grapher.update(reader.getValue(), reader.getSetPoint());
         }));
         

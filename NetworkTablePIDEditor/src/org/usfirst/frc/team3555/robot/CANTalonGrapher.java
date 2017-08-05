@@ -23,7 +23,7 @@ public class CANTalonGrapher {
 	private int translate;
 
 	private double startX;
-	private int resetPoint = 100;
+	private int resetPoint = 500;
 
 	private NetworkReader reader;
 	private Handler handler;
