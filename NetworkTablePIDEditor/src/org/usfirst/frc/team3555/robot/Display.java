@@ -34,10 +34,10 @@ public class Display extends Application {
 		grapher = new CANTalonGrapher(handler, reader);
     	
     	handler.getEnableButton().setOnAction(event -> {
-    		if(handler.getSquareWaveMonitor().isMonitoring())
-    			handler.getSquareWaveMonitor().end();
-    		
-//    		if(reader.isRobotEnabled()){
+    		if(handler.getReader().isRobotEnabled()) {
+	    		if(handler.getSquareWaveMonitor().isMonitoring())
+	    			handler.getSquareWaveMonitor().end();
+	    		
 				grapher.alternateState();
 				
 				reader.setEnabled(grapher.isGoing());
@@ -46,13 +46,11 @@ public class Display extends Application {
 					handler.getEnableButton().setText("Disable");
 				else
 					handler.getEnableButton().setText("Enable");
-//    		}
+    		} else {
+    			handler.getEnableButton().setText("Enable");
+    			handler.getReader().setEnabled(false);
+    		}
     	});
-    	
-    	handler.getSyncButton().setOnAction(e -> {
-    		syncPIDData();
-    	});
-    	
     	
     	handler.getSetPointField().setText(Double.toString(reader.getSetPoint()));
     	handler.getSetPointField().textProperty().addListener((observable, oldValue, newValue) -> {
@@ -155,16 +153,25 @@ public class Display extends Application {
     			}
     			
     			reader.setSetPoint(set);
-    		} else { //Start Square Wave
+    		} else if(handler.getReader().isRobotEnabled()){ //Start Square Wave
 				handler.getSquareWaveMonitor().start();
 //				handler.getSquareWaveButton().setText("End Square Wave");
     		}
     	});
     	
+    	syncPIDData();
+    	
     	Timeline gameLoop = new Timeline();
         gameLoop.setCycleCount(Timeline.INDEFINITE);
         
         gameLoop.getKeyFrames().add(new KeyFrame(Duration.seconds(.1), event -> {
+        	if(grapher.isGoing() && !handler.getReader().isRobotEnabled()) {
+        		grapher.alternateState();
+        		handler.getEnableButton().fire();
+        	}
+        	if(handler.getSquareWaveMonitor().isMonitoring() && !handler.getReader().isRobotEnabled())
+        		handler.getSquareWaveMonitor().end();
+        	
         	handler.getSquareWaveMonitor().update();
         	grapher.update(reader.getValue(), reader.getSetPoint());
         }));

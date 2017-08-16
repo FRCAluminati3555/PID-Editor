@@ -14,12 +14,16 @@ public class NetworkReader implements ITableListener {
 		
 		table = NetworkTable.getTable("CANTalon Table");
 		table.addTableListener(this);
+		
+		System.out.println("Table Connecting...");
+		
+		while(!table.isConnected()) {
+			continue;
+		}
+		
+		System.out.println("Table Connected!");
 	}
 	
-	public void update(){
-		
-	}
-
 	@Override
 	public void valueChanged(ITable table, String string, Object value, boolean arg3) {
 

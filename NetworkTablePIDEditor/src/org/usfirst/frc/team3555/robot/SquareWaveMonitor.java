@@ -18,8 +18,6 @@ public class SquareWaveMonitor {
 	public void update() {
 		if(monitoring) {
 			if(System.currentTimeMillis() > lastTime + frequency) {
-				System.out.println("Change");
-				
 				index++;
 				
 				if(index >= setPoints.length)

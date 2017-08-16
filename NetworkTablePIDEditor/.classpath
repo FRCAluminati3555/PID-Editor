@@ -9,5 +9,6 @@
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRLib.jar"/>
 	<classpathentry kind="var" path="ntcore"/>
 	<classpathentry kind="lib" path="res"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/CANJaguar.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

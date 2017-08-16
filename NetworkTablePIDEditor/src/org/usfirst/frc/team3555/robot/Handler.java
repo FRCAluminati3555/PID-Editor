@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 
 public class Handler {
 	private TextField setPointField, pField, iField, dField;
-	private Button enableButton, syncButton;
+	private Button enableButton;
 	private Label scaleLabel;
 	private LineChart<Number, Number> lineChart;
 	
@@ -33,7 +33,6 @@ public class Handler {
 		squareWaveMonitor = new SquareWaveMonitor(this);
 		
 		enableButton = (Button) (scene.lookup("#enable"));
-		syncButton = (Button) (scene.lookup("#Sync"));
 		setPointField = (TextField) (scene.lookup("#field"));
 		pField = (TextField) scene.lookup("#p");
 		iField = (TextField) scene.lookup("#i");
@@ -71,7 +70,6 @@ public class Handler {
 	public TextField getiField(){return iField;}
 	public TextField getdField(){return dField;}
 	public Button getEnableButton(){return enableButton;}
-	public Button getSyncButton(){return syncButton;}
 	public Label getScaleLabel(){return scaleLabel;}
 	public LineChart<Number, Number> getLineChart(){return lineChart;}
 	public Stage getStage(){return stage;}

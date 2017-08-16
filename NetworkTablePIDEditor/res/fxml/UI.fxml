@@ -16,7 +16,7 @@
           <NumberAxis label="RPM" side="LEFT" />
         </yAxis>
       </LineChart>
-      <Button id="enable" layoutX="309.0" layoutY="508.0" mnemonicParsing="false" text="Enable">
+      <Button id="enable" layoutX="309.0" layoutY="545.0" mnemonicParsing="false" text="Enable">
          <font>
             <Font size="20.0" />
          </font></Button>
@@ -49,11 +49,6 @@
             <Font size="20.0" />
          </font>
       </Label>
-      <Button id="Sync" layoutX="309.0" layoutY="566.0" mnemonicParsing="false" text="Sync Data">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Button>
       <Label id="pointLabel" layoutX="417.0" layoutY="627.0" text="Point Label">
          <font>
             <Font size="20.0" />
