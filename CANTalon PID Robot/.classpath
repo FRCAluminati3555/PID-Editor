@@ -9,5 +9,6 @@
 	<classpathentry kind="var" path="cscore" sourcepath="cscore.sources"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRLib.jar"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/CANJaguar.jar"/>
+	<classpathentry kind="var" path="ntcore"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

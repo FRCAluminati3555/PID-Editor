@@ -1,81 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.chart.*?>
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="663.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <LineChart id="lineChart" layoutX="14.0" layoutY="7.0" prefHeight="481.0" prefWidth="874.0" title="CANTalon Value">
-        <xAxis>
-          <NumberAxis label="Ticks" side="BOTTOM" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis label="RPM" side="LEFT" />
-        </yAxis>
-      </LineChart>
-      <Button id="enable" layoutX="309.0" layoutY="545.0" mnemonicParsing="false" text="Enable">
-         <font>
-            <Font size="20.0" />
-         </font></Button>
-      <TextField id="field" layoutX="109.0" layoutY="507.0" />
-      <TextField id="p" layoutX="109.0" layoutY="547.0" />
-      <Label layoutX="22.0" layoutY="508.0" text="Set Point">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <TextField id="i" layoutX="109.0" layoutY="588.0" />
-      <TextField id="d" layoutX="109.0" layoutY="627.0" />
-      <Label layoutX="85.0" layoutY="547.0" text="P">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <Label layoutX="86.0" layoutY="588.0" text="I">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <Label layoutX="81.0" layoutY="627.0" text="D">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <Label layoutX="309.0" layoutY="627.0" text="# Of Points: ">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <Label id="pointLabel" layoutX="417.0" layoutY="627.0" text="Point Label">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <Button id="SquareWaveButton" layoutX="699.0" layoutY="466.0" mnemonicParsing="false" text="Start Square Wave">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Button>
-      <TextField id="FrequencyField" layoutX="701.0" layoutY="515.0" />
-      <TextField id="SquareSetPoint1" layoutX="701.0" layoutY="551.0" />
-      <TextField id="SquareSetPoint2" layoutX="701.0" layoutY="588.0" />
-      <Label layoutX="547.0" layoutY="516.0" text="Frequency (ms): ">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <Label layoutX="578.0" layoutY="552.0" text="Set Point 1: ">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
-      <Label layoutX="578.0" layoutY="589.0" text="Set Point 2: ">
-         <font>
-            <Font size="20.0" />
-         </font>
-      </Label>
+      <Button id="AddGraph" layoutX="14.0" layoutY="24.0" mnemonicParsing="false" text="Add Graph" />
+      <Button id="AddEditor" layoutX="14.0" layoutY="63.0" mnemonicParsing="false" text="Add Value Editor" />
+      <TextField id="IDField" layoutX="125.0" layoutY="24.0" promptText="ID Of Device" />
    </children>
 </Pane>
