@@ -28,6 +28,9 @@ public class DeviceInfo {
 		doubles.put("Current", 0.0);
 		doubles.put("Temperature", 0.0);
 		
+		doubles.put("LowerBound", 0.0);
+		doubles.put("UpperBound", 0.0);
+		
 		booleans.put("Enabled", false);
 	}
 	
@@ -37,6 +40,18 @@ public class DeviceInfo {
 
 	public HashMap<String, Double> getDoubles(){return doubles;}
 	public HashMap<String, Boolean> getBooleans(){return booleans;}
+	
+	public double getValue() {
+		if(controlMode == CANTalon.TalonControlMode.Position)
+			return doubles.get("Position");
+		if(controlMode == CANTalon.TalonControlMode.Speed)
+			return doubles.get("Velocity");
+		if(controlMode == CANTalon.TalonControlMode.Current)
+			return doubles.get("Current");
+		if(controlMode == CANTalon.TalonControlMode.Voltage)
+			return doubles.get("Voltage");
+		return 0;
+	}
 
 	public CANTalon.TalonControlMode getControlMode(){return controlMode;}
 	public void setControlMode(CANTalon.TalonControlMode controlMode){this.controlMode = controlMode;}

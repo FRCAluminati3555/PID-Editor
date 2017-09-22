@@ -15,8 +15,8 @@ public class NetworkReader implements ITableListener {
 		this.handler = handler;
 		
 		NetworkTable.setClientMode();
-//		NetworkTable.setIPAddress("10.1.90.2");
-		NetworkTable.setIPAddress("127.0.0.1");
+		NetworkTable.setIPAddress("10.1.90.2");
+//		NetworkTable.setIPAddress("127.0.0.1");
 		
 		table = NetworkTable.getTable("CANTalon Table");
 		table.addTableListener(this);

@@ -1,22 +1,17 @@
 package org.usfirst.frc.team3555.robot.Components.Grapher;
 
-import java.awt.geom.Point2D;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.usfirst.frc.team3555.robot.Handler;
 import org.usfirst.frc.team3555.robot.Components.Updatable;
 
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderStroke;
 import javafx.scene.layout.BorderStrokeStyle;
@@ -83,6 +78,11 @@ public class Grapher extends Updatable {
         rightClickMenu = new ContextMenu();
         
         generateRightClickMenu("SetPoint", "Velocity", "Position", "Current", "Voltage", "Temperature");
+        data.put("UpperBound", new DataSeries(handler, "UpperBound", id));
+        data.put("LowerBound", new DataSeries(handler, "LowerBound", id));
+        
+        lineChart.getData().add(data.get("UpperBound").getDataSeries());
+        lineChart.getData().add(data.get("LowerBound").getDataSeries());
         
         lineChart.setOnScroll(event -> {
         	if(event.getDeltaY() < 0) {

@@ -35,7 +35,7 @@ public class DeviceInfoManager {
 	
 	public void setControlMode(CANTalon.TalonControlMode mode, int id) {
 		devices.get(id).setControlMode(mode);
-		handler.getReader().getTable().putValue(id + " Mode", mode.value);
+		handler.getReader().getTable().putNumber(id + " Mode", mode.value);
 	}
 	
 	public HashMap<Integer, DeviceInfo> getDevices(){return devices;}

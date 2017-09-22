@@ -8,7 +8,6 @@ import org.usfirst.frc.team3555.robot.Data.DeviceInfo;
 
 import com.ctre.CANTalon;
 
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -45,6 +44,10 @@ public class PIDEditor extends Pane {
 	private Button squareWaveButton;
 	private TextField frequencyField, setPoint1Field, setPoint2Field;
 	
+	private RestrictionMonitor restrictionMonitor;
+	private TextField upperRestrictionField, lowerRestrictionField;
+	private Button motorRestrictionButton;
+	
 	private boolean autoApply;
 	private double startX, startY;
 	
@@ -55,7 +58,10 @@ public class PIDEditor extends Pane {
 		this.id = id;
 
 		squareWaveMonitor = new SquareWaveMonitor(handler, id);
+		restrictionMonitor = new RestrictionMonitor(handler, this, id);
+		
 		handler.getUpdater().add(squareWaveMonitor);
+		handler.getUpdater().add(restrictionMonitor);
 		
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("/fxml/PID Editor.fxml"));
@@ -82,6 +88,30 @@ public class PIDEditor extends Pane {
 		frequencyField = (TextField) (lookup("#FrequencyField"));
 		setPoint1Field = (TextField) (lookup("#SetPoint1Field"));
 		setPoint2Field = (TextField) (lookup("#SetPoint2Field"));
+		
+		upperRestrictionField = (TextField) (lookup("#UpperRestrictField"));
+		lowerRestrictionField = (TextField) (lookup("#LowerRestrictField"));
+		motorRestrictionButton = (Button) (lookup("#MotorRestrictorButton"));
+		
+		motorRestrictionButton.setOnAction(e -> {
+			if(motorRestrictionButton.getText().equals("Enable Motor Restrictor") &&
+					(Util.getValue(upperRestrictionField) != 0 || Util.getValue(lowerRestrictionField) != 0)) {
+				
+				motorRestrictionButton.setText("Disable Motor Restrictor");
+				restrictionMonitor.setMonitoring(true);
+			} else if(motorRestrictionButton.getText().equals("Disable Motor Restrictor")) {
+				motorRestrictionButton.setText("Enable Motor Restrictor");
+				restrictionMonitor.setMonitoring(false);
+			}
+		});
+
+		lowerRestrictionField.textProperty().addListener((observable, oldValue, newValue) -> {
+			restrictionMonitor.getBounds()[0] = Util.getValue(lowerRestrictionField);
+		});
+		
+		upperRestrictionField.textProperty().addListener((observable, oldValue, newValue) -> {
+			restrictionMonitor.getBounds()[1] = Util.getValue(upperRestrictionField); 
+		});
 		
 		nameLabel.setText(String.valueOf(id));
 		autoApplyCheckBox.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) -> {
@@ -112,10 +142,11 @@ public class PIDEditor extends Pane {
 					handler.getDeviceInfoManager().setDouble("SetPoint", Util.getValue(setPointField), id);
 				}
 			} else {
-				enableButton.setText("Enable");
-				handler.getDeviceInfoManager().setBoolean("Enabled", false, id);
-				squareWaveButton.setText("Start Square Wave");
-				squareWaveMonitor.end();
+//				enableButton.setText("Enable");
+//				handler.getDeviceInfoManager().setBoolean("Enabled", false, id);
+//				squareWaveButton.setText("Start Square Wave");
+//				squareWaveMonitor.end();
+				disable();
 			}
 		});
 		
@@ -227,9 +258,7 @@ public class PIDEditor extends Pane {
 		enableButton.setText("Enable");
 		squareWaveButton.setText("Start Square Wave");
 		squareWaveMonitor.end();
-	}
-	
-	public void applyAllValuesToTable() {
-		
+		motorRestrictionButton.setText("Enable Motor Restrictor");
+		restrictionMonitor.setMonitoring(false);
 	}
 }

@@ -1,12 +1,26 @@
 package org.usfirst.frc.team3555.robot.Components;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+
+import org.usfirst.frc.team3555.robot.Components.Grapher.Grapher;
 
 public class Updater {
 	private ArrayList<Updatable> toUpdate;
+	private Comparator<Updatable> sorter;
 	
 	public Updater() {
 		toUpdate = new ArrayList<>();
+		
+		sorter = new Comparator<Updatable>() {
+			@Override
+			public int compare(Updatable o1, Updatable o2) {
+				if(o1 instanceof Grapher)
+					return 1;
+				else 
+					return -1;
+			}
+		};
 	}
 	
 	public void update() {
@@ -22,5 +36,6 @@ public class Updater {
 	
 	public void add(Updatable toAdd) {
 		toUpdate.add(toAdd);
+		toUpdate.sort(sorter);
 	}
 }

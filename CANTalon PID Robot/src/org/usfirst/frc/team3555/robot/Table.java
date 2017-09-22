@@ -12,7 +12,7 @@ public class Table {
 	
 	public Table() {
 //		NetworkTable.setClientMode();
-		NetworkTable.setIPAddress("127.0.0.1");
+//		NetworkTable.setIPAddress("127.0.0.1");
 		
 		table = NetworkTable.getTable("CANTalon Table");
 		table.putNumber("1 P", 10);
@@ -29,6 +29,8 @@ public class Table {
 		table.putBoolean("1 Enabled", false);
 		table.putBoolean("Robot Enabled", true);
 		
+		
+		//Keep Table Alive
 		while(true) {
 			try {
 				Thread.sleep(100);
