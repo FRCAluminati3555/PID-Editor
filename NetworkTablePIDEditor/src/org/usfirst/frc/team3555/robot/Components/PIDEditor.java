@@ -10,6 +10,7 @@ import com.ctre.CANTalon;
 
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -24,6 +25,7 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 
 public class PIDEditor extends Pane {
 	private Handler handler;
@@ -48,6 +50,8 @@ public class PIDEditor extends Pane {
 	private TextField upperRestrictionField, lowerRestrictionField;
 	private Button motorRestrictionButton;
 	
+	private Button resetPosition;
+	
 	private boolean autoApply;
 	private double startX, startY;
 	
@@ -71,6 +75,7 @@ public class PIDEditor extends Pane {
 		}
 		
 		nameLabel = (Label) (lookup("#NameLabel"));
+		resetPosition = (Button) (lookup("#ResetPosition"));
 		
 		setPointField = (TextField) (lookup("#SetPointField"));
 		pField = (TextField) (lookup("#PField"));
@@ -113,7 +118,8 @@ public class PIDEditor extends Pane {
 			restrictionMonitor.getBounds()[1] = Util.getValue(upperRestrictionField); 
 		});
 		
-		nameLabel.setText(String.valueOf(id));
+		nameLabel.setText(handler.getDeviceInfoManager().getDevices().get(id).getName());
+		
 		autoApplyCheckBox.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) -> {
 			autoApply = newValue;
 			applyButton.setDisable(newValue);
@@ -126,13 +132,17 @@ public class PIDEditor extends Pane {
 		dField.setText(String.valueOf(handler.getDeviceInfoManager().getDouble("D", id)));
 		fField.setText(String.valueOf(handler.getDeviceInfoManager().getDouble("F", id)));
 		
-		modeChooser.getItems().addAll(CANTalon.TalonControlMode.PercentVbus, CANTalon.TalonControlMode.Speed, CANTalon.TalonControlMode.Position, CANTalon.TalonControlMode.Voltage, CANTalon.TalonControlMode.Current);
+		modeChooser.getItems().addAll(CANTalon.TalonControlMode.PercentVbus, CANTalon.TalonControlMode.Speed, CANTalon.TalonControlMode.Position, CANTalon.TalonControlMode.Follower, CANTalon.TalonControlMode.Voltage, CANTalon.TalonControlMode.Current);
 		modeChooser.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) -> {
 			disable();
 			handler.getDeviceInfoManager().setControlMode(modeChooser.getItems().get(newValue.intValue()), id);
 		});
 		
 		modeChooser.getSelectionModel().selectFirst();
+		
+		resetPosition.setOnAction(e -> {
+			handler.getDeviceInfoManager().setBoolean("ResetPosition", true, id);
+		});
 		
 		enableButton.setOnAction(e -> {
 			if(enableButton.getText().equals("Enable")) {
@@ -260,5 +270,11 @@ public class PIDEditor extends Pane {
 		squareWaveMonitor.end();
 		motorRestrictionButton.setText("Enable Motor Restrictor");
 		restrictionMonitor.setMonitoring(false);
+	}
+	
+	public void enable() {
+		if(!handler.getDeviceInfoManager().getBoolean("Enabled", id)) {
+			enableButton.fire();
+		}
 	}
 }

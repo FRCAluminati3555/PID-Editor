@@ -1,13 +1,13 @@
 package org.usfirst.frc.team3555.robot;
 
 import com.ctre.CANTalon;
-import com.ctre.CANTalon.FeedbackDevice;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class TalonMonitor {
 	private CANTalon talon;
 	
+	private String name;
 	private int id;
 	private double p, i, d, f;
 	private double setPoint; 
@@ -18,7 +18,13 @@ public class TalonMonitor {
 		id = talon.getDeviceID();
 	}
 	
+	public TalonMonitor(String name, CANTalon talon) {
+		this(talon);
+		this.name = name;
+	}
+	
 	public void update(NetworkTable table) {
+		table.putString(id + " Name", name);
 		table.putNumber(id + " Velocity", talon.getSpeed());
 		table.putNumber(id + " Position", talon.getPosition());
 		table.putNumber(id + " Voltage", talon.getBusVoltage());
@@ -37,6 +43,11 @@ public class TalonMonitor {
     		
     	else if(!table.getBoolean(id + " Enabled", false) && talon.isEnabled())
     		talon.disable();
+		
+		if(table.getBoolean(id + " ResetPosition", false)) {
+			talon.setPosition(0);
+			table.putBoolean(id + " ResetPosition", false);
+		}
 		
 		checkPIDF(table);
 		

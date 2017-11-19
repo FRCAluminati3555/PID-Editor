@@ -41,6 +41,8 @@ public class NetworkReader implements ITableListener {
 	 */
 	@Override
 	public void valueChanged(ITable table, String string, Object value, boolean didNotExist) {
+		System.out.println("Talon Changed");
+		
 		String[] definition = string.split(" ");
 		if(definition.length != 2) {
 			System.err.println("Did not get Proper Definition");
@@ -60,7 +62,11 @@ public class NetworkReader implements ITableListener {
 			table.putBoolean(id + " Enabled", false);
 		}
 		
-		if(handler.getDeviceInfoManager().getDevices().get(id).getDoubles().containsKey(property)) {
+		if(property.equals("Name")) {
+			handler.getDeviceInfoManager().getDevices().get(id).setName(((String) value) + " (" + id + ")");
+		}
+		
+		else if(handler.getDeviceInfoManager().getDevices().get(id).getDoubles().containsKey(property)) {
 			if(handler.getDeviceInfoManager().getDevices().get(id).getDoubles().put(property, (Double) value) == null) { 
 				System.err.println("Invalid Property: " + property);
 			}

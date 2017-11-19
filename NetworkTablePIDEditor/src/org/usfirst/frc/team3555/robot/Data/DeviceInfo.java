@@ -12,6 +12,8 @@ public class DeviceInfo {
 	
 	private CANTalon.TalonControlMode controlMode;
 	
+	private String name;
+	
 	public DeviceInfo() {
 		doubles = new HashMap<>();
 		booleans = new HashMap<>();
@@ -32,14 +34,15 @@ public class DeviceInfo {
 		doubles.put("UpperBound", 0.0);
 		
 		booleans.put("Enabled", false);
+		booleans.put("ResetPosition", false);
 	}
 	
 	public String toString() {
-		return "Mode: " + controlMode +  "\nDoubles: " + doubles.toString() + "\nBooleans: " + booleans.toString();
+		return "--------------\nName: " + name + ",\nMode: " + controlMode +  ",\nDoubles: " + doubles.toString() + ",\nBooleans: " + booleans.toString() + "\n--------------";
 	}
 
-	public HashMap<String, Double> getDoubles(){return doubles;}
-	public HashMap<String, Boolean> getBooleans(){return booleans;}
+	public HashMap<String, Double> getDoubles() { return doubles; }
+	public HashMap<String, Boolean> getBooleans() { return booleans; }
 	
 	public double getValue() {
 		if(controlMode == CANTalon.TalonControlMode.Position)
@@ -53,6 +56,9 @@ public class DeviceInfo {
 		return 0;
 	}
 
-	public CANTalon.TalonControlMode getControlMode(){return controlMode;}
-	public void setControlMode(CANTalon.TalonControlMode controlMode){this.controlMode = controlMode;}
+	public CANTalon.TalonControlMode getControlMode() { return controlMode; }
+	public void setControlMode(CANTalon.TalonControlMode controlMode) { this.controlMode = controlMode; }
+	
+	public String getName() { return name; }
+	public void setName(String name) { this.name = name; }
 }

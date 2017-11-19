@@ -23,7 +23,7 @@ public class Robot extends SampleRobot {
     	
     	talon = new CANTalon(0);
     	talon.configEncoderCodesPerRev(500);
-    	monitor.add(new TalonMonitor(talon));
+    	monitor.add(new TalonMonitor("Talon", talon));
     	
 //    	talon = new CANTalon(0);
 //    	talon.changeControlMode(CANTalon.TalonControlMode.Speed);

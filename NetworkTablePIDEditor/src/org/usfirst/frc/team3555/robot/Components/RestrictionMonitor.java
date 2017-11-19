@@ -26,6 +26,8 @@ public class RestrictionMonitor extends Updatable {
 		handler.getDeviceInfoManager().getDevices().get(id).getDoubles().put("LowerBound", bounds[0]);
 		handler.getDeviceInfoManager().getDevices().get(id).getDoubles().put("UpperBound", bounds[1]);
 		
+//		System.out.println(handler.getDeviceInfoManager().getDevices().get(id).getValue());
+		
 		if(monitoring && handler.getDeviceInfoManager().getBoolean("Enabled", id)) {
 			double value = handler.getDeviceInfoManager().getDevices().get(id).getValue();
 			

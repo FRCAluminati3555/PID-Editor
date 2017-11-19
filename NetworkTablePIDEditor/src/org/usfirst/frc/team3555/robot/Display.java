@@ -4,11 +4,13 @@ import java.util.Set;
 
 import org.usfirst.frc.team3555.robot.Components.PIDEditor;
 import org.usfirst.frc.team3555.robot.Components.Grapher.Grapher;
+import org.usfirst.frc.team3555.robot.Data.DeviceInfo;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -22,9 +24,12 @@ public class Display extends Application {
 	private Handler handler;
 	
 	private Stage stage;
+	private Pane pane;
 	
 	private Button addGraphButton;
 	private Button addEditorButton;
+	private Button allButton;
+	
 	private TextField idField;
 	
 	@Override
@@ -35,7 +40,7 @@ public class Display extends Application {
 		stage.setTitle("Line Chart");
     	
     	Parent root = FXMLLoader.load(getClass().getResource("/fxml/UI.fxml"));
-    	Pane pane = new Pane(root);
+    	pane = new Pane(root);
     	Scene scene = new Scene(pane, 800, 600);
 
     	handler = new Handler();
@@ -62,6 +67,17 @@ public class Display extends Application {
     		handler.getUpdater().add(g);
     		pane.getChildren().add(g.getLineChart());
     	});
+    	
+    	allButton = (Button) (scene.lookup("#AllButton"));
+    	allButton.setOnAction(e -> {
+    		if(allButton.getText().equals("Enable All") && DeviceInfo.RobotEnabled) {
+    			allButton.setText("Disable All");
+    			enableAll();
+    		} else {
+    			allButton.setText("Enable All");
+    			disableAll();
+    		}
+    	});
 
     	stage.setOnCloseRequest(e -> {
     		Set<Integer> keys = handler.getDeviceInfoManager().getDevices().keySet();
@@ -83,5 +99,17 @@ public class Display extends Application {
         stage.show();
 	}
 	
+	public void enableAll() {
+		for(Node n : pane.getChildren()) 
+			if(n instanceof PIDEditor) 
+				((PIDEditor) n).enable();
+	}
+	
+	public void disableAll() {
+		for(Node n : pane.getChildren()) 
+			if(n instanceof PIDEditor) 
+				((PIDEditor) n).disable();
+	}
+
 	public Stage getStage(){return stage;}
 }

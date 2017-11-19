@@ -1,5 +1,6 @@
 package org.usfirst.frc.team3555.robot.Components.Grapher;
 
+import java.io.File;
 import java.util.HashMap;
 
 import org.usfirst.frc.team3555.robot.Handler;
@@ -10,6 +11,7 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.Border;
@@ -39,7 +41,7 @@ public class Grapher extends Updatable {
 	private double rightClickSensitivity;
 	private boolean dragging;
 	
-	private int resetPoint = 500;
+	private int resetPoint = 1000;
 
 	private Handler handler;
 	private LineChart<Number, Number> lineChart;
@@ -63,8 +65,12 @@ public class Grapher extends Updatable {
 		lineChart = new LineChart<Number, Number>(xAxis, yAxis);
     	lineChart.setAnimated(false);
 
-    	lineChart.setTitle(String.valueOf(id));
-    	
+    	String name = handler.getDeviceInfoManager().getDevices().get(id).getName();
+    	if(name != null) 
+    		lineChart.setTitle(name);
+    	else
+    		lineChart.setTitle(String.valueOf(id));
+    		
         yAxis.setForceZeroInRange(true);
         xAxis.setForceZeroInRange(false);
 
@@ -78,6 +84,14 @@ public class Grapher extends Updatable {
         rightClickMenu = new ContextMenu();
         
         generateRightClickMenu("SetPoint", "Velocity", "Position", "Current", "Voltage", "Temperature");
+        MenuItem exportItem = new MenuItem("Export");
+        exportItem.setOnAction(e -> {
+        	//TODO Export
+        	ExportData.export(lineChart.getTitle(), data);
+        });
+        rightClickMenu.getItems().add(exportItem);
+        
+        
         data.put("UpperBound", new DataSeries(handler, "UpperBound", id));
         data.put("LowerBound", new DataSeries(handler, "LowerBound", id));
         
