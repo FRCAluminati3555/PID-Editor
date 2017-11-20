@@ -24,6 +24,7 @@ public class DeviceInfo {
 		doubles.put("F", 0.0);
 		
 		doubles.put("SetPoint", 0.0);
+		doubles.put("BatteryVoltage", 0.0);
 		doubles.put("Voltage", 0.0);
 		doubles.put("Velocity", 0.0);
 		doubles.put("Position", 0.0);

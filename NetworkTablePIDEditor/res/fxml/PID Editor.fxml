@@ -144,11 +144,6 @@
             <Insets left="10.0" top="5.0" />
          </padding>
       </Label>
-      <Button id="Export" layoutX="250.0" layoutY="430.0" mnemonicParsing="false" text="Export Data">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Button>
    </children>
    <padding>
       <Insets left="5.0" />

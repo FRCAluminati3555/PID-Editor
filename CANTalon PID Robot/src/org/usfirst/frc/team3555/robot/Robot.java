@@ -3,6 +3,7 @@ package org.usfirst.frc.team3555.robot;
 import com.ctre.CANTalon;
 import com.ctre.CANTalon.FeedbackDevice;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
@@ -49,6 +50,7 @@ public class Robot extends SampleRobot {
 //        	table.putNumber("value", talon.getSpeed());
 //        	
         	table.putBoolean("Robot Enabled", true);
+        	
         	monitor.update(table);
 //        	
 //        	if(table.getBoolean("Talon Enabled", false) && !talon.isEnabled()) {

@@ -83,7 +83,7 @@ public class Grapher extends Updatable {
         
         rightClickMenu = new ContextMenu();
         
-        generateRightClickMenu("SetPoint", "Velocity", "Position", "Current", "Voltage", "Temperature");
+        generateRightClickMenu("SetPoint", "Velocity", "Position", "Current", "Voltage", "Temperature", "BatteryVoltage");
         MenuItem exportItem = new MenuItem("Export");
         exportItem.setOnAction(e -> {
         	//TODO Export

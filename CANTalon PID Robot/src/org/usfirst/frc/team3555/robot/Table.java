@@ -17,6 +17,7 @@ public class Table {
 		table = NetworkTable.getTable("CANTalon Table");
 		table.putString("1 Name", "Talon");
 		
+		table.putNumber("1 BatteryVoltage", 12.2);
 		table.putNumber("1 P", 10);
 		table.putNumber("1 I", 0.05);
 		table.putNumber("1 D", 5);
@@ -32,17 +33,18 @@ public class Table {
 		table.putBoolean("Robot Enabled", true);
 		
 		table.putString("2 Name", "The Other One");
+		table.putNumber("2 BatteryVoltage", 12.2);
 		table.putNumber("2 P", 10);
 		table.putNumber("2 I", 0.05);
 		table.putNumber("2 D", 5);
 		table.putNumber("2 F", 7);
 		                 
-		table.putNumber("2 SetPoint", 1000);
-		table.putNumber("2 Velocity", 800);
-		table.putNumber("2 Position", 600.5);
-		table.putNumber("2 Temperature", 92);
+		table.putNumber("2 SetPoint", 870);
+		table.putNumber("2 Velocity", 825);
+		table.putNumber("2 Position", 325);
+		table.putNumber("2 Temperature", 81);
 		table.putNumber("2 Voltage", 8);
-		table.putNumber("2 Current", 2);
+		table.putNumber("2 Current", 9);
 		table.putBoolean("2 Enabled", false);
 		
 		

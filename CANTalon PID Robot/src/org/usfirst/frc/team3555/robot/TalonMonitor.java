@@ -2,6 +2,7 @@ package org.usfirst.frc.team3555.robot;
 
 import com.ctre.CANTalon;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 public class TalonMonitor {
@@ -30,6 +31,7 @@ public class TalonMonitor {
 		table.putNumber(id + " Voltage", talon.getBusVoltage());
 		table.putNumber(id + " Current", talon.getOutputCurrent());
 		table.putNumber(id + " Temperature", talon.getTemperature());
+		table.putNumber(id + " BatteryVoltage", DriverStation.getInstance().getBatteryVoltage());
 		
 		if(table.getBoolean(id + " Enabled", false) && !talon.isEnabled()) {
 			talon.enable();

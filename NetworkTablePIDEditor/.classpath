@@ -10,7 +10,7 @@
 	<classpathentry kind="var" path="ntcore"/>
 	<classpathentry kind="lib" path="res"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/CANJaguar.jar"/>
-	<classpathentry kind="lib" path="C:/Users/samse/Desktop/Programming/jexcelapi/jxl.jar" sourcepath="C:/Users/samse/Desktop/Programming/jexcelapi/src">
+	<classpathentry kind="lib" path="C:/Users/Sam/Desktop/Programming/jexcelapi/jxl.jar" sourcepath="C:/Users/samse/Desktop/Programming/jexcelapi/src">
 		<attributes>
 			<attribute name="javadoc_location" value="file:/C:/Users/samse/Desktop/Programming/jexcelapi/docs/"/>
 		</attributes>
