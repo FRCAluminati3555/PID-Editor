@@ -86,11 +86,16 @@ public class Grapher extends Updatable {
         generateRightClickMenu("SetPoint", "Velocity", "Position", "Current", "Voltage", "Temperature", "BatteryVoltage");
         MenuItem exportItem = new MenuItem("Export");
         exportItem.setOnAction(e -> {
-        	//TODO Export
         	ExportData.export(lineChart.getTitle(), data);
         });
-        rightClickMenu.getItems().add(exportItem);
         
+        MenuItem clearItem = new MenuItem("Clear");
+        clearItem.setOnAction(e -> {
+        	clear();
+        });
+        
+        rightClickMenu.getItems().add(clearItem);
+        rightClickMenu.getItems().add(exportItem);
         
         data.put("UpperBound", new DataSeries(handler, "UpperBound", id));
         data.put("LowerBound", new DataSeries(handler, "LowerBound", id));
@@ -181,10 +186,7 @@ public class Grapher extends Updatable {
 				});
 				
 				if(x == resetPoint) {
-					data.forEach((s, d) -> {
-						d.clear();
-					});
-					x = 0;
+					clear();
 				}
 			}
 		} else {
@@ -207,6 +209,13 @@ public class Grapher extends Updatable {
 	        	}
 	        });
 		}
+	}
+	
+	public void clear() {
+		data.forEach((s, d) -> {
+			d.clear();
+			x = 0;
+		});
 	}
 	
 //	public void setSeriesData() {
