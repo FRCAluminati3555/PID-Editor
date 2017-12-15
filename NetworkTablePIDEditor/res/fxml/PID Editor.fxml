@@ -6,14 +6,15 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="446.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="474.0" prefWidth="610.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <GridPane gridLinesVisible="true" layoutX="14.0" layoutY="86.0" prefHeight="233.0" prefWidth="194.0">
+      <GridPane gridLinesVisible="true" layoutX="14.0" layoutY="60.0" prefHeight="259.0" prefWidth="203.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="99.0" minWidth="10.0" prefWidth="84.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="123.0" minWidth="10.0" prefWidth="123.0" />
         </columnConstraints>
         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -21,49 +22,76 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label alignment="CENTER" contentDisplay="CENTER" text="Set Point" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-            <TextField id="SetPointField" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+            <Label alignment="CENTER" contentDisplay="CENTER" text="Set Point" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font></Label>
+            <TextField id="SetPointField" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets left="5.0" right="5.0" />
                </GridPane.margin>
             </TextField>
-            <TextField id="PField" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+            <TextField id="PField" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets left="5.0" right="5.0" />
                </GridPane.margin>
             </TextField>
-            <TextField id="IField" GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <TextField id="IField" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets left="5.0" right="5.0" />
                </GridPane.margin>
             </TextField>
-            <TextField id="DField" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <TextField id="DField" GridPane.columnIndex="1" GridPane.rowIndex="4">
                <GridPane.margin>
                   <Insets left="5.0" right="5.0" />
                </GridPane.margin>
             </TextField>
-            <TextField id="FField" GridPane.columnIndex="1" GridPane.rowIndex="4">
+            <TextField id="FField" GridPane.columnIndex="1" GridPane.rowIndex="5">
                <GridPane.margin>
                   <Insets left="5.0" right="5.0" />
                </GridPane.margin>
             </TextField>
-            <Label text="P" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-            <Label text="I" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-            <Label text="D" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
-            <Label text="F" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER" />
+            <Label text="P" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font></Label>
+            <Label text="I" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font></Label>
+            <Label text="D" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font></Label>
+            <Label text="F" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font></Label>
+            <Button id="ApplyButton" mnemonicParsing="false" text="Apply" GridPane.halignment="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Button>
+            <CheckBox id="ApplyCheckBox" mnemonicParsing="false" text="Auto Apply" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </CheckBox>
          </children>
          <padding>
             <Insets bottom="5.0" left="5.0" />
          </padding>
       </GridPane>
-      <ChoiceBox id="ModeChooser" layoutX="223.0" layoutY="54.0" prefWidth="150.0" />
-      <Button id="EnableButton" layoutX="223.0" layoutY="93.0" mnemonicParsing="false" text="Enable">
+      <Button id="EnableButton" layoutX="506.0" layoutY="60.0" mnemonicParsing="false" text="Enable">
          <font>
             <Font size="20.0" />
          </font>
       </Button>
-      <Button id="StartSquareWaveButton" layoutX="223.0" layoutY="143.0" mnemonicParsing="false" text="Start Square Wave" />
-      <GridPane gridLinesVisible="true" layoutX="223.0" layoutY="179.0" prefHeight="140.0" prefWidth="214.0">
+      <Button id="StartSquareWaveButton" layoutX="255.0" layoutY="282.0" mnemonicParsing="false" text="Start Square Wave">
+         <font>
+            <Font size="16.0" />
+         </font></Button>
+      <GridPane gridLinesVisible="true" layoutX="255.0" layoutY="325.0" prefHeight="140.0" prefWidth="214.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="116.0" minWidth="10.0" prefWidth="116.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="95.0" minWidth="10.0" prefWidth="84.0" />
@@ -97,8 +125,6 @@
             <Insets bottom="5.0" right="5.0" />
          </padding>
       </GridPane>
-      <Button id="ApplyButton" layoutX="24.0" layoutY="51.0" mnemonicParsing="false" text="Apply" />
-      <CheckBox id="ApplyCheckBox" layoutX="104.0" layoutY="55.0" mnemonicParsing="false" text="Auto Apply" />
       <GridPane gridLinesVisible="true" layoutX="24.0" layoutY="369.0" prefHeight="91.0" prefWidth="214.0">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -126,14 +152,14 @@
             </TextField>
          </children>
       </GridPane>
-      <Button id="MotorRestrictorButton" layoutX="21.0" layoutY="332.0" mnemonicParsing="false" text="Enable Motor Restrictor">
+      <Button id="MotorRestrictorButton" layoutX="16.0" layoutY="326.0" mnemonicParsing="false" text="Enable Restrictor">
          <font>
-            <Font size="14.0" />
+            <Font size="16.0" />
          </font>
       </Button>
-      <Button id="ResetPosition" layoutX="254.0" layoutY="335.0" mnemonicParsing="false" text="Reset Position">
+      <Button id="ResetPosition" layoutX="221.0" layoutY="70.0" mnemonicParsing="false" text="Reset Position">
          <font>
-            <Font size="14.0" />
+            <Font size="16.0" />
          </font>
       </Button>
       <Label id="NameLabel" alignment="CENTER" contentDisplay="CENTER" text="Name">
@@ -144,6 +170,58 @@
             <Insets left="10.0" top="5.0" />
          </padding>
       </Label>
+      <GridPane gridLinesVisible="true" layoutX="221.0" layoutY="107.0" prefHeight="165.0" prefWidth="383.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="217.0" minWidth="10.0" prefWidth="153.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="189.0" minWidth="10.0" prefWidth="137.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="125.0" minWidth="10.0" prefWidth="32.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label prefHeight="30.0" prefWidth="137.0" text="Set Point Feedback" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <ChoiceBox id="SetPointFeedbackChooser" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <CheckBox id="SetPointFeedbackCheckBox" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+            <Label text="Feedback Device" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <ChoiceBox id="FeedBackDeviceChooser" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="Name" GridPane.halignment="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label text="Choice" GridPane.columnIndex="1" GridPane.halignment="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label text="Automatic" GridPane.columnIndex="2" GridPane.halignment="CENTER">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <Label text="Mode" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Label>
+            <ChoiceBox id="ModeChooser" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="Codes Per Rev" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
+            <TextField id="CodesPerRevField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+         </children>
+      </GridPane>
    </children>
    <padding>
       <Insets left="5.0" />

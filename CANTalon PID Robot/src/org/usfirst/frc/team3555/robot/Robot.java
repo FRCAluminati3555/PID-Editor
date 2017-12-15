@@ -27,22 +27,23 @@ public class Robot extends SampleRobot {
     	table = NetworkTable.getTable("CANTalon Table");
     	
     	monitor = new TalonMonitorManager();
+    	monitor.add(new TalonMonitor("Servo", new CANTalon(0)));
     	
-    	talonLeftFront = new CANTalon(41);
-    	monitor.add(new TalonMonitor("Left Front", talonLeftFront));
-    	
-    	talonLeftBack = new CANTalon(43);
-    	talonLeftBack.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-    	talonLeftBack.configEncoderCodesPerRev(360);
-    	monitor.add(new TalonMonitor("Left Back", talonLeftBack));
-    	
-    	talonRightFront = new CANTalon(42);
-    	monitor.add(new TalonMonitor("Right Front", talonRightFront));
-
-    	talonRightBack = new CANTalon(44);
-    	talonRightBack.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
-    	talonRightBack.configEncoderCodesPerRev(360);
-    	monitor.add(new TalonMonitor("Right Back", talonRightBack));
+//    	talonLeftFront = new CANTalon(41);
+//    	monitor.add(new TalonMonitor("Left Front", talonLeftFront));
+//    	
+//    	talonLeftBack = new CANTalon(43);
+//    	talonLeftBack.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+//    	talonLeftBack.configEncoderCodesPerRev(360);
+//    	monitor.add(new TalonMonitor("Left Back", talonLeftBack));
+//    	
+//    	talonRightFront = new CANTalon(42);
+//    	monitor.add(new TalonMonitor("Right Front", talonRightFront));
+//
+//    	talonRightBack = new CANTalon(44);
+//    	talonRightBack.setFeedbackDevice(CANTalon.FeedbackDevice.QuadEncoder);
+//    	talonRightBack.configEncoderCodesPerRev(360);
+//    	monitor.add(new TalonMonitor("Right Back", talonRightBack));
     	
 //    	climber1 = new CANTalon(46);
 //    	monitor.add(new TalonMonitor(climber1));

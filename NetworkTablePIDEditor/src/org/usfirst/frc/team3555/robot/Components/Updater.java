@@ -26,6 +26,7 @@ public class Updater {
 	public void update() {
 		for(int i = toUpdate.size() - 1; i >= 0; i--) {
 			if(!toUpdate.get(i).isActive()) {
+				System.out.println("Remove: " + toUpdate.get(i));
 				toUpdate.remove(i);
 				continue;
 			}

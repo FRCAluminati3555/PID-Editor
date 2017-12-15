@@ -15,8 +15,8 @@ public class NetworkReader implements ITableListener {
 		this.handler = handler;
 		
 		NetworkTable.setClientMode();
-		NetworkTable.setIPAddress("10.1.90.2");
-//		NetworkTable.setIPAddress("127.0.0.1");
+//		NetworkTable.setIPAddress("10.1.90.2");
+		NetworkTable.setIPAddress("127.0.0.1");
 		
 		table = NetworkTable.getTable("CANTalon Table");
 		table.addTableListener(this);
@@ -41,7 +41,7 @@ public class NetworkReader implements ITableListener {
 	 */
 	@Override
 	public void valueChanged(ITable table, String string, Object value, boolean didNotExist) {
-		System.out.println("Talon Changed");
+//		System.out.println("Talon Changed");
 		
 		String[] definition = string.split(" ");
 		if(definition.length != 2) {

@@ -23,6 +23,7 @@ public class Table {
 		table.putNumber("1 D", 5);
 		table.putNumber("1 F", 7);
 		
+		table.putNumber("1 AnalogInPosition", 964);
 		table.putNumber("1 SetPoint", 1000);
 		table.putNumber("1 Velocity", 800);
 		table.putNumber("1 Position", 600.5);
@@ -40,6 +41,7 @@ public class Table {
 		table.putNumber("2 F", 7);
 		                 
 		table.putNumber("2 SetPoint", 870);
+		table.putNumber("2 AnalogInPosition", 246);
 		table.putNumber("2 Velocity", 825);
 		table.putNumber("2 Position", 325);
 		table.putNumber("2 Temperature", 81);

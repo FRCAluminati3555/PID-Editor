@@ -10,7 +10,6 @@ import com.ctre.CANTalon;
 
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -25,7 +24,6 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
-import javafx.scene.text.TextAlignment;
 
 public class PIDEditor extends Pane {
 	private Handler handler;
@@ -50,7 +48,14 @@ public class PIDEditor extends Pane {
 	private TextField upperRestrictionField, lowerRestrictionField;
 	private Button motorRestrictionButton;
 	
+	private ChoiceBox<String> feedbackSetPointChooser;
+	private CheckBox feedbackSetPointCheckBox;
+	private ChoiceBox<CANTalon.FeedbackDevice> feedbackDeviceChooser;
+	private TextField codesPerRevField;
+	
 	private Button resetPosition;
+	
+	private SetPointFeedbackMonitor setPointFeedbackMonitor;
 	
 	private boolean autoApply;
 	private double startX, startY;
@@ -61,11 +66,13 @@ public class PIDEditor extends Pane {
 		this.handler = handler;
 		this.id = id;
 
-		squareWaveMonitor = new SquareWaveMonitor(handler, id);
+		squareWaveMonitor = new SquareWaveMonitor(handler, this, id);
 		restrictionMonitor = new RestrictionMonitor(handler, this, id);
+		setPointFeedbackMonitor = new SetPointFeedbackMonitor(handler, this, id);
 		
 		handler.getUpdater().add(squareWaveMonitor);
 		handler.getUpdater().add(restrictionMonitor);
+		handler.getUpdater().add(setPointFeedbackMonitor);
 		
 		try {
 			Parent root = FXMLLoader.load(getClass().getResource("/fxml/PID Editor.fxml"));
@@ -94,18 +101,49 @@ public class PIDEditor extends Pane {
 		setPoint1Field = (TextField) (lookup("#SetPoint1Field"));
 		setPoint2Field = (TextField) (lookup("#SetPoint2Field"));
 		
+		//TODO New Stuff
+		feedbackSetPointChooser = (ChoiceBox<String>) (lookup("#SetPointFeedbackChooser"));
+		feedbackSetPointCheckBox = (CheckBox) (lookup("#SetPointFeedbackCheckBox"));
+		feedbackDeviceChooser = (ChoiceBox<CANTalon.FeedbackDevice>) (lookup("#FeedBackDeviceChooser"));
+		codesPerRevField = (TextField) (lookup("#CodesPerRevField"));
+
+		feedbackSetPointChooser.getItems().addAll("AnalogInPosition");
+		feedbackSetPointChooser.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) -> {
+//			disable();
+			setPointFeedbackMonitor.setFeedbackProperty(feedbackSetPointChooser.getItems().get(newValue.intValue()));
+		});
+		
+		feedbackSetPointCheckBox.setOnAction(e -> {
+			if(squareWaveMonitor.isMonitoring())
+				endSquareWaveMonitor();
+			
+			setPointFeedbackMonitor.setFeedbackToSetPoint(feedbackSetPointCheckBox.isSelected());
+			if(!setPointFeedbackMonitor.isFeedbackToSetPoint())
+				handler.getDeviceInfoManager().setDouble("SetPoint", Util.getValue(setPointField), id);
+		});
+		
+		feedbackDeviceChooser.getItems().addAll(CANTalon.FeedbackDevice.AnalogEncoder, CANTalon.FeedbackDevice.AnalogPot, CANTalon.FeedbackDevice.QuadEncoder);
+		feedbackDeviceChooser.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) -> {
+			disableAll();
+			handler.getDeviceInfoManager().setFeedbackDevice(feedbackDeviceChooser.getItems().get(newValue.intValue()), id);
+		});
+		
+		codesPerRevField.textProperty().addListener((observable, oldValue, newValue) -> {
+			handler.getDeviceInfoManager().setInteger("CodesPerRev", (int) Util.getValue(codesPerRevField), id);
+		});
+		
 		upperRestrictionField = (TextField) (lookup("#UpperRestrictField"));
 		lowerRestrictionField = (TextField) (lookup("#LowerRestrictField"));
 		motorRestrictionButton = (Button) (lookup("#MotorRestrictorButton"));
 		
 		motorRestrictionButton.setOnAction(e -> {
-			if(motorRestrictionButton.getText().equals("Enable Motor Restrictor") &&
+			if(motorRestrictionButton.getText().equals("Enable Restrictor") &&
 					(Util.getValue(upperRestrictionField) != 0 || Util.getValue(lowerRestrictionField) != 0)) {
 				
-				motorRestrictionButton.setText("Disable Motor Restrictor");
+				motorRestrictionButton.setText("Disable Restrictor");
 				restrictionMonitor.setMonitoring(true);
-			} else if(motorRestrictionButton.getText().equals("Disable Motor Restrictor")) {
-				motorRestrictionButton.setText("Enable Motor Restrictor");
+			} else if(motorRestrictionButton.getText().equals("Disable Restrictor")) {
+				motorRestrictionButton.setText("Enable Restrictor");
 				restrictionMonitor.setMonitoring(false);
 			}
 		});
@@ -134,7 +172,7 @@ public class PIDEditor extends Pane {
 		
 		modeChooser.getItems().addAll(CANTalon.TalonControlMode.PercentVbus, CANTalon.TalonControlMode.Speed, CANTalon.TalonControlMode.Position, CANTalon.TalonControlMode.Follower, CANTalon.TalonControlMode.Voltage, CANTalon.TalonControlMode.Current);
 		modeChooser.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) -> {
-			disable();
+			disableAll();
 			handler.getDeviceInfoManager().setControlMode(modeChooser.getItems().get(newValue.intValue()), id);
 		});
 		
@@ -149,19 +187,24 @@ public class PIDEditor extends Pane {
 				if(DeviceInfo.RobotEnabled) {
 					enableButton.setText("Disable");
 					handler.getDeviceInfoManager().setBoolean("Enabled", true, id);
-					handler.getDeviceInfoManager().setDouble("SetPoint", Util.getValue(setPointField), id);
+//					handler.getDeviceInfoManager().setDouble("SetPoint", Util.getValue(setPointField), id);
 				}
 			} else {
 //				enableButton.setText("Enable");
 //				handler.getDeviceInfoManager().setBoolean("Enabled", false, id);
 //				squareWaveButton.setText("Start Square Wave");
 //				squareWaveMonitor.end();
-				disable();
+				disableAll();
 			}
 		});
 		
 		squareWaveButton.setOnAction(e -> {
 			if(squareWaveButton.getText().equals("Start Square Wave") && squareWaveMonitor.start()) {
+				if(setPointFeedbackMonitor.isFeedbackToSetPoint()) {
+					setPointFeedbackMonitor.setFeedbackToSetPoint(false);
+					feedbackSetPointCheckBox.setSelected(false);
+				}
+				
 				handler.getDeviceInfoManager().setBoolean("Enabled", true, id);
 				squareWaveButton.setText("End Square Wave");
 				enableButton.setText("Disable");
@@ -174,6 +217,9 @@ public class PIDEditor extends Pane {
 		});
 		
 		applyButton.setOnAction(e -> {
+			setPointFeedbackMonitor.setFeedbackToSetPoint(false);
+			feedbackSetPointCheckBox.setSelected(false);
+			
 			if(!squareWaveMonitor.isMonitoring()) {
 				handler.getDeviceInfoManager().setDouble("SetPoint", Util.getValue(setPointField), id);
 			} else {
@@ -190,6 +236,9 @@ public class PIDEditor extends Pane {
 		
 		setPointField.textProperty().addListener((observable, oldValue, newValue) -> {
 			if(autoApply) {
+				setPointFeedbackMonitor.setFeedbackToSetPoint(false);
+				feedbackSetPointCheckBox.setSelected(false);
+				
 				handler.getDeviceInfoManager().setDouble("SetPoint", Util.getValue(setPointField), id);
 				
 				if(squareWaveMonitor.isMonitoring()) {
@@ -260,15 +309,29 @@ public class PIDEditor extends Pane {
         	}
 		});
 		
-		disable();
+		disableAll();
 	}
 	
-	public void disable() {
+	
+	
+	public void disableAll() {
+		disableController();
+		disableController();
+		endRestriction();
+	}
+	
+	public void disableController() {
 		handler.getDeviceInfoManager().setBoolean("Enabled", false, id);
 		enableButton.setText("Enable");
+	}
+	
+	public void endSquareWaveMonitor() {
 		squareWaveButton.setText("Start Square Wave");
 		squareWaveMonitor.end();
-		motorRestrictionButton.setText("Enable Motor Restrictor");
+	}
+	
+	public void endRestriction() {
+		motorRestrictionButton.setText("Enable Restrictor");
 		restrictionMonitor.setMonitoring(false);
 	}
 	

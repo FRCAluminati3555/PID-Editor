@@ -108,7 +108,7 @@ public class Display extends Application {
 	public void disableAll() {
 		for(Node n : pane.getChildren()) 
 			if(n instanceof PIDEditor) 
-				((PIDEditor) n).disable();
+				((PIDEditor) n).disableAll();
 	}
 
 	public Stage getStage(){return stage;}

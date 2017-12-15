@@ -3,7 +3,7 @@ package org.usfirst.frc.team3555.robot.Components;
 import org.usfirst.frc.team3555.robot.Handler;
 
 public class SquareWaveMonitor extends Updatable {
-	private Handler handler;
+	private PIDEditor editor;
 	
 	private long lastTime;
 	private double frequency;
@@ -12,15 +12,12 @@ public class SquareWaveMonitor extends Updatable {
 	private int index;
 	
 	private boolean monitoring;
-	private int id;
 	
-	public SquareWaveMonitor(Handler handler, int id) {
-		this.handler = handler;
-		this.id = id;
+	public SquareWaveMonitor(Handler handler, PIDEditor editor, int id) {
+		super(handler, id);
+		this.editor = editor;
 		
 		setPoints = new double[2];
-		
-		active = true;
 	}
 	
 	@Override

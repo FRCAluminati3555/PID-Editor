@@ -1,6 +1,5 @@
 package org.usfirst.frc.team3555.robot.Components.Grapher;
 
-import java.io.File;
 import java.util.HashMap;
 
 import org.usfirst.frc.team3555.robot.Handler;
@@ -22,12 +21,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 
 public class Grapher extends Updatable {
-//	private Series<Number, Number> dataSeries;
-//	private ArrayList<Point2D> previousData;
-//	
-//	private Series<Number, Number> setPointSeries;
-//	private ArrayList<Point2D> previousSetPointData;
-
 	private HashMap<String, DataSeries> data;
 	
 	private int x;
@@ -43,15 +36,11 @@ public class Grapher extends Updatable {
 	
 	private int resetPoint = 1000;
 
-	private Handler handler;
 	private LineChart<Number, Number> lineChart;
 	private ContextMenu rightClickMenu;
 	
-	private int id;
-	
 	public Grapher(Handler handler, int id) {
-		this.handler = handler;
-		this.id = id;
+		super(handler, id);
 		
 		rightClickSensitivity = 10;
 		
@@ -83,7 +72,7 @@ public class Grapher extends Updatable {
         
         rightClickMenu = new ContextMenu();
         
-        generateRightClickMenu("SetPoint", "Velocity", "Position", "Current", "Voltage", "Temperature", "BatteryVoltage");
+        generateRightClickMenu("SetPoint", "Velocity", "Position", "Current", "Voltage", "Temperature", "BatteryVoltage", "AnalogInPosition");
         MenuItem exportItem = new MenuItem("Export");
         exportItem.setOnAction(e -> {
         	ExportData.export(lineChart.getTitle(), data);

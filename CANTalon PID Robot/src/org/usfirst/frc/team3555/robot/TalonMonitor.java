@@ -4,14 +4,18 @@ import com.ctre.CANTalon;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class TalonMonitor {
 	private CANTalon talon;
+	private CANTalon.FeedbackDevice feedbackDevice;
 	
 	private String name;
 	private int id;
 	private double p, i, d, f;
 	private double setPoint; 
+
+	private int codesPerRev;
 	
 	public TalonMonitor(CANTalon talon) {
 		this.talon = talon;
@@ -32,6 +36,7 @@ public class TalonMonitor {
 		table.putNumber(id + " Current", talon.getOutputCurrent());
 		table.putNumber(id + " Temperature", talon.getTemperature());
 		table.putNumber(id + " BatteryVoltage", DriverStation.getInstance().getBatteryVoltage());
+		table.putNumber(id + " AnalogInPosition", talon.getAnalogInPosition());
 		
 		if(table.getBoolean(id + " Enabled", false) && !talon.isEnabled()) {
 			talon.enable();
@@ -55,6 +60,20 @@ public class TalonMonitor {
 		
 		if(table.getNumber(id + " Mode", 0) != talon.getControlMode().value) 
 			talon.changeControlMode(CANTalon.TalonControlMode.valueOf((int) table.getNumber(id + " Mode", 0)));
+		
+		int device = (int) table.getNumber(id + " FeedbackDevice", -1);
+		if(feedbackDevice == null || device != feedbackDevice.value) {
+			if(device != -1) {
+				feedbackDevice = CANTalon.FeedbackDevice.valueOf(device);
+				talon.setFeedbackDevice(feedbackDevice);
+			}
+		}
+		
+		int tempCodesPerRev = (int) table.getNumber(id + " CodesPerRev", -1);
+		if(tempCodesPerRev != -1 && tempCodesPerRev != codesPerRev) {
+			codesPerRev = tempCodesPerRev;
+			talon.configEncoderCodesPerRev(codesPerRev);
+		}
 	}
 	
 	public void checkPIDF(NetworkTable table) {
