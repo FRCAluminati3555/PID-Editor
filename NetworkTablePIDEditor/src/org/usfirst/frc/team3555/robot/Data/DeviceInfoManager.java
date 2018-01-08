@@ -4,7 +4,8 @@ import java.util.HashMap;
 
 import org.usfirst.frc.team3555.robot.Handler;
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 public class DeviceInfoManager {
 	private Handler handler;
@@ -41,12 +42,12 @@ public class DeviceInfoManager {
 		}
 	}
 	
-	public void setControlMode(CANTalon.TalonControlMode mode, int id) {
+	public void setControlMode(ControlMode mode, int id) {
 		devices.get(id).setControlMode(mode);
 		handler.getReader().getTable().putNumber(id + " Mode", mode.value);
 	}
 	
-	public void setFeedbackDevice(CANTalon.FeedbackDevice feedbackDevice, int id) {
+	public void setFeedbackDevice(FeedbackDevice feedbackDevice, int id) {
 		devices.get(id).setControlMode(feedbackDevice);
 		handler.getReader().getTable().putNumber(id + " FeedbackDevice", feedbackDevice.value);
 	}

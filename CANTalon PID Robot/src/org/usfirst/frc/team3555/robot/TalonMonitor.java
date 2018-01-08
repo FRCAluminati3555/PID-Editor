@@ -1,21 +1,19 @@
 package org.usfirst.frc.team3555.robot;
 
-import com.ctre.CANTalon;
-
+import WrapperTalon.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+/**
+ * I have plans to create my own network transport system that wil replace the network table and be more suited to this project 
+ * @author Sam
+ */
 public class TalonMonitor {
-	private CANTalon talon;
-	private CANTalon.FeedbackDevice feedbackDevice;
+//	private CANTalon talon;
+//	private CANTalon.FeedbackDevice feedbackDevice;
 	
-	private String name;
+	private CANTalon talon;
 	private int id;
-	private double p, i, d, f;
-	private double setPoint; 
-
-	private int codesPerRev;
 	
 	public TalonMonitor(CANTalon talon) {
 		this.talon = talon;
@@ -23,56 +21,40 @@ public class TalonMonitor {
 		id = talon.getDeviceID();
 	}
 	
-	public TalonMonitor(String name, CANTalon talon) {
-		this(talon);
-		this.name = name;
-	}
-	
 	public void update(NetworkTable table) {
-		table.putString(id + " Name", name);
-		table.putNumber(id + " Velocity", talon.getSpeed());
-		table.putNumber(id + " Position", talon.getPosition());
+		table.putString(id + " Name", talon.getName());
+		table.putNumber(id + " Velocity", talon.getSelectedSensorVelocity(0));
+		table.putNumber(id + " Position", talon.getSelectedSensorPosition(0));
 		table.putNumber(id + " Voltage", talon.getBusVoltage());
 		table.putNumber(id + " Current", talon.getOutputCurrent());
 		table.putNumber(id + " Temperature", talon.getTemperature());
 		table.putNumber(id + " BatteryVoltage", DriverStation.getInstance().getBatteryVoltage());
-		table.putNumber(id + " AnalogInPosition", talon.getAnalogInPosition());
 		
 		if(table.getBoolean(id + " Enabled", false) && !talon.isEnabled()) {
-			talon.enable();
-			
-			talon.setP(p);
-			talon.setI(i);
-			talon.setD(d);
-			talon.setF(f);
-			talon.setSetpoint(setPoint);
-		}
-    		
-    	else if(!table.getBoolean(id + " Enabled", false) && talon.isEnabled())
-    		talon.disable();
+			talon.setEnabled(true);
+			checkPIDF(table);
+		} else if(!table.getBoolean(id + " Enabled", false) && talon.isEnabled()) 
+			talon.setEnabled(false);
 		
 		if(table.getBoolean(id + " ResetPosition", false)) {
-			talon.setPosition(0);
+			talon.setSensorPosition(0);
 			table.putBoolean(id + " ResetPosition", false);
 		}
 		
 		checkPIDF(table);
 		
-		if(table.getNumber(id + " Mode", 0) != talon.getControlMode().value) 
-			talon.changeControlMode(CANTalon.TalonControlMode.valueOf((int) table.getNumber(id + " Mode", 0)));
+		int mode = (int) table.getNumber(id + " Mode", 0);
+		if(mode != talon.getControlMode().value) 
+			talon.setControlMode(mode);
 		
 		int device = (int) table.getNumber(id + " FeedbackDevice", -1);
-		if(feedbackDevice == null || device != feedbackDevice.value) {
-			if(device != -1) {
-				feedbackDevice = CANTalon.FeedbackDevice.valueOf(device);
-				talon.setFeedbackDevice(feedbackDevice);
-			}
+		if(device != talon.getFeedbackDevice().value) {
+			talon.setFeedbackDevice(device);
 		}
 		
 		int tempCodesPerRev = (int) table.getNumber(id + " CodesPerRev", -1);
-		if(tempCodesPerRev != -1 && tempCodesPerRev != codesPerRev) {
-			codesPerRev = tempCodesPerRev;
-			talon.configEncoderCodesPerRev(codesPerRev);
+		if(tempCodesPerRev != -1 && tempCodesPerRev != talon.getSensorUnitsPerRotation()) {
+			talon.setSensorUnitsPerRotation(tempCodesPerRev);
 		}
 	}
 	
@@ -81,29 +63,19 @@ public class TalonMonitor {
 				tempD = table.getNumber(id + " D", 0), tempF = table.getNumber(id + " F", 0),
 				tempSetPoint = table.getNumber(id + " SetPoint", 0);
 		
-		if(tempP != talon.getP()) {
+		if(tempP != talon.getP()) 
 			talon.setP(tempP);
-			p = tempP;
-		}
 		
-		if(tempI != talon.getI()) {
+		if(tempI != talon.getI()) 
 			talon.setI(tempI);
-			i = tempI;
-		}
 		
-		if(tempD != talon.getD()) {
+		if(tempD != talon.getD()) 
 			talon.setD(tempD);
-			d = tempD;
-		}
 		
-		if(tempF != talon.getF()) {
+		if(tempF != talon.getF()) 
 			talon.setF(tempF);
-			f = tempF;
-		}
 		
-		if(tempSetPoint != talon.getSetpoint()) {
-			talon.setSetpoint(tempSetPoint);
-			setPoint = tempSetPoint;
-		}
+		if(tempSetPoint != talon.getSetPoint()) 
+			talon.set(tempSetPoint);
 	}
 }

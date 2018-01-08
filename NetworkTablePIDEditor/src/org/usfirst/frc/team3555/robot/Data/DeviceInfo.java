@@ -2,7 +2,8 @@ package org.usfirst.frc.team3555.robot.Data;
 
 import java.util.HashMap;
 
-import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 public class DeviceInfo {
 	public static boolean RobotEnabled;
@@ -11,8 +12,8 @@ public class DeviceInfo {
 	private HashMap<String, Boolean> booleans;
 	private HashMap<String, Integer> integers;
 	
-	private CANTalon.TalonControlMode controlMode;
-	private CANTalon.FeedbackDevice feedbackDevice;
+	private ControlMode controlMode;
+	private FeedbackDevice feedbackDevice;
 	
 	private String name;
 	
@@ -53,22 +54,20 @@ public class DeviceInfo {
 	public HashMap<String, Integer> getIntegers() { return integers; }
 	
 	public double getValue() {
-		if(controlMode == CANTalon.TalonControlMode.Position)
+		if(controlMode == ControlMode.Position)
 			return doubles.get("Position");
-		if(controlMode == CANTalon.TalonControlMode.Speed)
+		if(controlMode == ControlMode.Velocity)
 			return doubles.get("Velocity");
-		if(controlMode == CANTalon.TalonControlMode.Current)
+		if(controlMode == ControlMode.Current)
 			return doubles.get("Current");
-		if(controlMode == CANTalon.TalonControlMode.Voltage)
-			return doubles.get("Voltage");
 		return 0;
 	}
 
-	public CANTalon.TalonControlMode getControlMode() { return controlMode; }
-	public void setControlMode(CANTalon.TalonControlMode controlMode) { this.controlMode = controlMode; }
+	public ControlMode getControlMode() { return controlMode; }
+	public void setControlMode(ControlMode controlMode) { this.controlMode = controlMode; }
 	
-	public CANTalon.FeedbackDevice getFeedbackDevice() { return feedbackDevice; }
-	public void setControlMode(CANTalon.FeedbackDevice feedbackDevice) { this.feedbackDevice = feedbackDevice; }
+	public FeedbackDevice getFeedbackDevice() { return feedbackDevice; }
+	public void setControlMode(FeedbackDevice feedbackDevice) { this.feedbackDevice = feedbackDevice; }
 	
 	public String getName() { return name; }
 	public void setName(String name) { this.name = name; }

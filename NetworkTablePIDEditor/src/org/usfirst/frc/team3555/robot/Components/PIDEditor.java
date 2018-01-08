@@ -7,6 +7,8 @@ import org.usfirst.frc.team3555.robot.Util;
 import org.usfirst.frc.team3555.robot.Data.DeviceInfo;
 
 import com.ctre.CANTalon;
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
@@ -35,7 +37,7 @@ public class PIDEditor extends Pane {
 	
 	private TextField setPointField, pField, iField, dField, fField;
 
-	private ChoiceBox<CANTalon.TalonControlMode> modeChooser;
+	private ChoiceBox<ControlMode> modeChooser;
 	private Button enableButton;
 	
 	private Button applyButton;
@@ -50,7 +52,7 @@ public class PIDEditor extends Pane {
 	
 	private ChoiceBox<String> feedbackSetPointChooser;
 	private CheckBox feedbackSetPointCheckBox;
-	private ChoiceBox<CANTalon.FeedbackDevice> feedbackDeviceChooser;
+	private ChoiceBox<FeedbackDevice> feedbackDeviceChooser;
 	private TextField codesPerRevField;
 	
 	private Button resetPosition;
@@ -90,7 +92,7 @@ public class PIDEditor extends Pane {
 		dField = (TextField) (lookup("#DField"));
 		fField = (TextField) (lookup("#FField"));
 		
-		modeChooser = (ChoiceBox<CANTalon.TalonControlMode>) (lookup("#ModeChooser"));
+		modeChooser = (ChoiceBox<ControlMode>) (lookup("#ModeChooser"));
 		enableButton = (Button) (lookup("#EnableButton"));
 		
 		applyButton = (Button) (lookup("#ApplyButton"));
@@ -104,7 +106,7 @@ public class PIDEditor extends Pane {
 		//TODO New Stuff
 		feedbackSetPointChooser = (ChoiceBox<String>) (lookup("#SetPointFeedbackChooser"));
 		feedbackSetPointCheckBox = (CheckBox) (lookup("#SetPointFeedbackCheckBox"));
-		feedbackDeviceChooser = (ChoiceBox<CANTalon.FeedbackDevice>) (lookup("#FeedBackDeviceChooser"));
+		feedbackDeviceChooser = (ChoiceBox<FeedbackDevice>) (lookup("#FeedBackDeviceChooser"));
 		codesPerRevField = (TextField) (lookup("#CodesPerRevField"));
 
 		feedbackSetPointChooser.getItems().addAll("AnalogInPosition");
@@ -122,7 +124,7 @@ public class PIDEditor extends Pane {
 				handler.getDeviceInfoManager().setDouble("SetPoint", Util.getValue(setPointField), id);
 		});
 		
-		feedbackDeviceChooser.getItems().addAll(CANTalon.FeedbackDevice.AnalogEncoder, CANTalon.FeedbackDevice.AnalogPot, CANTalon.FeedbackDevice.QuadEncoder);
+		feedbackDeviceChooser.getItems().addAll(FeedbackDevice.None, FeedbackDevice.Analog, FeedbackDevice.QuadEncoder, FeedbackDevice.Tachometer);
 		feedbackDeviceChooser.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) -> {
 			disableAll();
 			handler.getDeviceInfoManager().setFeedbackDevice(feedbackDeviceChooser.getItems().get(newValue.intValue()), id);
@@ -170,7 +172,7 @@ public class PIDEditor extends Pane {
 		dField.setText(String.valueOf(handler.getDeviceInfoManager().getDouble("D", id)));
 		fField.setText(String.valueOf(handler.getDeviceInfoManager().getDouble("F", id)));
 		
-		modeChooser.getItems().addAll(CANTalon.TalonControlMode.PercentVbus, CANTalon.TalonControlMode.Speed, CANTalon.TalonControlMode.Position, CANTalon.TalonControlMode.Follower, CANTalon.TalonControlMode.Voltage, CANTalon.TalonControlMode.Current);
+		modeChooser.getItems().addAll(ControlMode.PercentOutput, ControlMode.Velocity, ControlMode.Position, ControlMode.Follower, ControlMode.Current);
 		modeChooser.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) -> {
 			disableAll();
 			handler.getDeviceInfoManager().setControlMode(modeChooser.getItems().get(newValue.intValue()), id);
