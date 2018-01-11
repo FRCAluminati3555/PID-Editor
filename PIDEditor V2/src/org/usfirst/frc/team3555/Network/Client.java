@@ -18,7 +18,7 @@ public class Client extends Thread {
 	private ReadServerThread readServer;
 	
 	private DeviceInfoManager deviceManager;
-	private ArrayList<Packet> toSend;
+	private volatile ArrayList<Packet> toSend;
 	private boolean running;
 	
 	public Client(DeviceInfoManager deviceManager) {
@@ -44,9 +44,11 @@ public class Client extends Thread {
 			
 			while(running) {
 				//Send
-				if(!toSend.isEmpty())
-					for(int i = toSend.size() - 1; i >= 0; i--)
-						toSend.remove(i).write(outputStream);
+				while(toSend.size() > 0) {
+				   Packet packet = toSend.remove(0);
+				   System.out.println("Client Sent: " + packet);
+				   packet.write(outputStream);
+			   }
 			}
 			
 			client.close();
@@ -56,7 +58,7 @@ public class Client extends Thread {
 	}
 	
 	public void send(Packet packet) { toSend.add(packet); }
-	public void shutDown() { running = false; }
+	public void shutDown() { running = false; readServer.shutDown(); }
 }
 
 class ReadServerThread extends Thread {
@@ -75,10 +77,11 @@ class ReadServerThread extends Thread {
    public void run() {
 	   while(running) {
 		   try {
-			   System.out.println("Read");
-			   Packet packet = Util.genPacket(inputStream);
-			   System.out.println(packet);
-			   deviceManager.processPacket(packet);
+			   if(inputStream.available() > 0) {
+				   Packet packet = Util.genPacket(inputStream);
+				   System.out.println("Client Read: " + packet);
+//				   monitorManager.processPacket();
+			   }
 		   } catch (IOException e) {
 			   e.printStackTrace();
 		   }

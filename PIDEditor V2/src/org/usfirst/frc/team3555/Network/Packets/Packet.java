@@ -20,8 +20,6 @@ public abstract class Packet {
 	}
 	
 	public void write(DataOutputStream output) throws IOException {
-		System.out.println("Writing");
-		
 		output.writeInt(controller.getValue());
 		output.writeInt(property.getValue());
 		output.writeInt(id);

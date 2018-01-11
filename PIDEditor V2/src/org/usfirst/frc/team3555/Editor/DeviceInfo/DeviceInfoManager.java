@@ -13,8 +13,7 @@ public class DeviceInfoManager {
 	private Client client;
 	private HashMap<Controller, ArrayList<DeviceInfo>> devices;
 	
-	public DeviceInfoManager(Client client) {
-		this.client = client;
+	public DeviceInfoManager() {
 		devices = new HashMap<>();
 		
 		for(Controller controller : Controller.values())
@@ -69,4 +68,6 @@ public class DeviceInfoManager {
 		if(controller == Controller.CANTalon)
 			devices.get(controller).add(new CANTalonDeviceInfo(client, id));
 	}
+	
+	public void setClient(Client client) { this.client = client; }
 }

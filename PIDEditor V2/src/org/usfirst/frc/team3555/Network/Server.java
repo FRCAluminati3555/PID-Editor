@@ -48,22 +48,20 @@ public class Server extends Thread {
 		   Socket server = serverSocket.accept();
 		   
 		   System.out.println("Connected To Client: " + server.getRemoteSocketAddress());
-		   DataOutputStream output = new DataOutputStream(server.getOutputStream());
-		   output.flush();
+		   DataOutputStream outputStream = new DataOutputStream(server.getOutputStream());
+		   outputStream.flush();
 		   
 		   DataInputStream inputStream = new DataInputStream(server.getInputStream());
 		   
 		   readThread = new ReadClientThread(monitorManager, inputStream);
 		   readThread.start();
 		   
-		   toSend.add(new IntegerPacket(Controller.CANTalon, Properties.Current, 842, 48));
-		   
 		   while(running) {
 			   //Send
 			   while(toSend.size() > 0) {
 				   Packet packet = toSend.remove(0);
-				   System.out.println(packet);
-				   packet.write(output);
+				   System.out.println("Server Sent: " + packet);
+				   packet.write(outputStream);
 			   }
 		   }
 		   
@@ -73,8 +71,8 @@ public class Server extends Thread {
 	   }
    }
    
-   public void send(Packet packet) { toSend.add(packet); System.out.println(toSend.size()); }
-   public void shutDown() { running = false; }
+   public void send(Packet packet) { toSend.add(packet); }
+   public void shutDown() { running = false; readThread.shutDown();}
 }
 
 class ReadClientThread extends Thread{
@@ -93,8 +91,11 @@ class ReadClientThread extends Thread{
    public void run() {
 	   while(running) {
 		   try {
-			   if(inputStream.available() > 0)
-				   monitorManager.processPacket(Util.genPacket(inputStream));
+			   if(inputStream.available() > 0) {
+				   Packet packet = Util.genPacket(inputStream);
+				   System.out.println("Server Read: " + packet);
+//				   monitorManager.processPacket();
+			   }
 		   } catch (IOException e) {
 			   e.printStackTrace();
 		   }
