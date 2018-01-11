@@ -1,13 +1,17 @@
 package org.usfirst.frc.team3555.Network;
 
-import java.io.EOFException;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import org.usfirst.frc.team3555.Util;
+import org.usfirst.frc.team3555.Util.Controller;
+import org.usfirst.frc.team3555.Util.Properties;
+import org.usfirst.frc.team3555.Network.Packets.IntegerPacket;
+import org.usfirst.frc.team3555.Network.Packets.Packet;
 import org.usfirst.frc.team3555.Robot.Monitors.MonitorManager;
 
 /**
@@ -15,13 +19,15 @@ import org.usfirst.frc.team3555.Robot.Monitors.MonitorManager;
  * @author Sam
  */
 public class Server extends Thread {
-	public static String host = "";
-	public static int port = 8080;
+	public static String host = "localhost";
+	public static int port = 8546;
+	
+	private volatile ArrayList<Packet> toSend;
 	
 	private ServerSocket serverSocket;
-   
+	private ReadClientThread readThread;
+	
 	private MonitorManager monitorManager;
-	private ArrayList<Packet> toSend;
    
 	private boolean running;
    
@@ -42,22 +48,23 @@ public class Server extends Thread {
 		   Socket server = serverSocket.accept();
 		   
 		   System.out.println("Connected To Client: " + server.getRemoteSocketAddress());
-		   ObjectInputStream objIn = new ObjectInputStream(server.getInputStream());
-		   ObjectOutputStream objOut = new ObjectOutputStream(server.getOutputStream());
+		   DataOutputStream output = new DataOutputStream(server.getOutputStream());
+		   output.flush();
+		   
+		   DataInputStream inputStream = new DataInputStream(server.getInputStream());
+		   
+		   readThread = new ReadClientThread(monitorManager, inputStream);
+		   readThread.start();
+		   
+		   toSend.add(new IntegerPacket(Controller.CANTalon, Properties.Current, 842, 48));
 		   
 		   while(running) {
-			   //Read
-			   try {
-				   monitorManager.processPacket((Packet) objIn.readObject());
-			   } catch(ClassNotFoundException e) {
-				   e.printStackTrace();
-			   } catch(EOFException e) {
-				   
-			   }
-			   
 			   //Send
-			   for(int i = toSend.size() - 1; i >= 0; i--)
-				   objOut.writeObject(toSend.remove(i));
+			   while(toSend.size() > 0) {
+				   Packet packet = toSend.remove(0);
+				   System.out.println(packet);
+				   packet.write(output);
+			   }
 		   }
 		   
 		   server.close();
@@ -66,6 +73,35 @@ public class Server extends Thread {
 	   }
    }
    
-   public void send(Packet packet) { toSend.add(packet); }
+   public void send(Packet packet) { toSend.add(packet); System.out.println(toSend.size()); }
    public void shutDown() { running = false; }
+}
+
+class ReadClientThread extends Thread{
+   private MonitorManager monitorManager;
+   private DataInputStream inputStream;
+   private boolean running;
+   
+   public ReadClientThread(MonitorManager monitorManager, DataInputStream inputStream) {
+	   this.monitorManager = monitorManager;
+	   this.inputStream = inputStream;
+	   
+	   running = true;
+   }
+   
+   @Override
+   public void run() {
+	   while(running) {
+		   try {
+			   if(inputStream.available() > 0)
+				   monitorManager.processPacket(Util.genPacket(inputStream));
+		   } catch (IOException e) {
+			   e.printStackTrace();
+		   }
+	   }
+   }
+   
+   public void shutDown() {
+	   running = false;
+   }
 }

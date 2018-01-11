@@ -2,8 +2,8 @@ package org.usfirst.frc.team3555.Robot.Monitors;
 
 import org.usfirst.frc.team3555.Util.Controller;
 import org.usfirst.frc.team3555.Util.Properties;
-import org.usfirst.frc.team3555.Network.Packet;
 import org.usfirst.frc.team3555.Network.Server;
+import org.usfirst.frc.team3555.Network.Packets.Packet;
 import org.usfirst.frc.team3555.Robot.CANTalon;
 
 public class CANTalonMonitor extends Monitor {
