@@ -5,30 +5,36 @@
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-package org.usfirst.frc.team3555.Robot;
+package org.usfirst.frc.team3555.robot;
+
+import java.io.IOException;
+
+import org.usfirst.frc.team3555.Network.Server;
+import org.usfirst.frc.team3555.robot.Monitors.CANTalonMonitor;
+import org.usfirst.frc.team3555.robot.Monitors.MonitorManager;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
 
 public class Robot extends IterativeRobot {
-//	private Server server;
-//	private MonitorManager monitorManager;
+	private Server server;
+	private MonitorManager monitorManager;
 	
 	@Override
 	public void robotInit() {
-//		monitorManager = new MonitorManager();
-//		
-//		try {
-//			server = new Server(monitorManager);
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		monitorManager = new MonitorManager();
 		
-//		monitorManager.add(new CANTalonMonitor(server, new CANTalon(0)));
-//        server.start();
+		try {
+			server = new Server(monitorManager);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		monitorManager.add(new CANTalonMonitor(server, new CANTalon(0)));
+        server.start();
 	}
 
 	@Override
 	public void teleopPeriodic() {
-//		monitorManager.update();
+		monitorManager.update();
 	}
 }

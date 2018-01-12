@@ -7,8 +7,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import org.usfirst.frc.team3555.Util;
-import org.usfirst.frc.team3555.Util.Controller;
-import org.usfirst.frc.team3555.Util.Properties;
 import org.usfirst.frc.team3555.Editor.DeviceInfo.DeviceInfoManager;
 import org.usfirst.frc.team3555.Network.Packets.Packet;
 
@@ -33,6 +31,7 @@ public class Client extends Thread {
 	@Override
 	public void run() {
 		try {
+			System.out.println("CLIENT\n");
 			System.out.println("Client Connecting To: " + Server.host + ", On Port: " + Server.port);
 			Socket client = new Socket(Server.host, Server.port);
 			
@@ -43,9 +42,6 @@ public class Client extends Thread {
 			
 			readServer = new ReadServerThread(deviceManager, inputStream);
 			readServer.start();
-			
-			send(Util.genPacket(Controller.CANTalon, Properties.Enabled,  true, 0));
-			send(Util.genPacket(Controller.CANTalon, Properties.SetPoint, .5,   0));
 			
 			while(running) {
 				//Send

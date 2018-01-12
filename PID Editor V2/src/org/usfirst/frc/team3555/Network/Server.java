@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import org.usfirst.frc.team3555.Util;
 import org.usfirst.frc.team3555.Network.Packets.Packet;
-import org.usfirst.frc.team3555.Robot.Monitors.MonitorManager;
+import org.usfirst.frc.team3555.robot.Monitors.MonitorManager;
 
 /**
  *	Robot Side will update the talon monitors in the robot 
@@ -17,7 +17,8 @@ import org.usfirst.frc.team3555.Robot.Monitors.MonitorManager;
  */
 public class Server extends Thread {
 	public static String host = "localhost";
-	public static int port = 5800;
+//	public static String host = "172.22.11.2";
+	public static int port = 8080;
 	
 	private ServerSocket serverSocket;
 	private ReadClientThread readThread;
@@ -34,12 +35,13 @@ public class Server extends Thread {
 		running = true;
 	   
 		serverSocket = new ServerSocket(port);
-	    serverSocket.setSoTimeout(10000);
+	    serverSocket.setSoTimeout(0);
    }
    
    @Override
    public void run() {
 	   try {
+		   System.out.println("SERVER\n");
 		   System.out.println("Waiting For Client On Port: " + serverSocket.getLocalPort() + ".....");
 		   Socket server = serverSocket.accept();
 		   
@@ -61,7 +63,7 @@ public class Server extends Thread {
 			   }
 			   
 			   try {
-				   sleep(10);
+				   sleep(100);
 			   } catch (InterruptedException e) {
 				   e.printStackTrace();
 			   }
