@@ -18,7 +18,7 @@ public class TestServerClient {
 	public static void main(String[] args) throws IOException {
 		MonitorManager manager = new MonitorManager();
 		Server server = new Server(manager);
-		
+		 
 		server.start();
 		
 		DeviceInfoManager deviceManager = new DeviceInfoManager();
