@@ -9,7 +9,10 @@ package org.usfirst.frc.team3555.robot;
 
 import java.io.IOException;
 
+import org.usfirst.frc.team3555.Util.Controller;
+import org.usfirst.frc.team3555.Util.Properties;
 import org.usfirst.frc.team3555.Network.Server;
+import org.usfirst.frc.team3555.Network.Packets.BooleanPacket;
 import org.usfirst.frc.team3555.robot.Monitors.CANTalonMonitor;
 import org.usfirst.frc.team3555.robot.Monitors.MonitorManager;
 
@@ -29,12 +32,23 @@ public class Robot extends IterativeRobot {
 			e.printStackTrace();
 		}
 		
-		monitorManager.add(new CANTalonMonitor(server, new CANTalon(0)));
+		monitorManager.add(new CANTalonMonitor(server, new CANTalon(1)));
+		
         server.start();
 	}
 
+	@Override 
+	public void teleopInit() {
+		server.send(new BooleanPacket(Controller.DriverStation, Properties.Enabled, true, 0));
+	}
+	
 	@Override
 	public void teleopPeriodic() {
 		monitorManager.update();
+	}
+	
+	@Override
+	public void disabledInit() {
+		server.send(new BooleanPacket(Controller.DriverStation, Properties.Enabled, false, 0));
 	}
 }

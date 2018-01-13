@@ -3,9 +3,9 @@ package org.usfirst.frc.team3555.Editor.DeviceInfo;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.usfirst.frc.team3555.Util;
 import org.usfirst.frc.team3555.Util.Controller;
 import org.usfirst.frc.team3555.Util.Properties;
-import org.usfirst.frc.team3555.Util;
 import org.usfirst.frc.team3555.Network.Client;
 import org.usfirst.frc.team3555.Network.Packets.Packet;
 
@@ -24,17 +24,26 @@ public class DeviceInfoManager {
 	 * Put In data without sending over network
 	 * Allows for data that doesn't need to be sent, not send
 	 */
-	public void putData(Controller controller, Properties property, Object value, int id) {
-		getDeviceInfo(controller, id).putInfo(property, value);
+//	public void putData(Controller controller, Properties property, Object value, int id) {
+//		getDeviceInfo(controller, id).putInfo(property, value);
+//	}
+	
+	public void putData(DeviceInfo device, Properties property, Object value) {
+		device.putInfo(property, value);
 	}
 	
 	/**
 	 * Sends the information over the network as a packet and stores the value in the device info object
 	 */
-	public void sendData(Controller controller, Properties property, Object value, int id) {
-		DeviceInfo device = getDeviceInfo(controller, id);
+//	public void sendData(Controller controller, Properties property, Object value, int id) {
+//		DeviceInfo device = getDeviceInfo(controller, id);
+//		device.putInfo(property, value);
+//		device.sendPacket(Util.genPacket(controller, property, value, id));
+//	}
+	
+	public void sendData(DeviceInfo device, Properties property, Object value) {
 		device.putInfo(property, value);
-		device.sendPacket(Util.genPacket(controller, property, value, id));
+		device.sendPacket(Util.genPacket(device.getController(), property, value, device.getId()));
 	}
 	
 	public Object getInfo(Controller controller, Properties property, int id) {
@@ -62,7 +71,10 @@ public class DeviceInfoManager {
 			}
 		}
 		
-		devices.get(packet.getController()).add(new DeviceInfo(packet));
+//		System.out.println("New Device Created! " + packet.getId() + "---------------------------------------");
+		devices.get(packet.getController()).add(new DeviceInfo(client, packet));
+//		System.out.println("THIS CONTROLLER: " + packet.getController());
+//		System.out.println("List: " + devices.get(packet.getController()));
 	}
 	
 	public void addDevice(Controller controller, int id) {
@@ -70,4 +82,21 @@ public class DeviceInfoManager {
 	}
 	
 	public void setClient(Client client) { this.client = client; }
+	
+	public boolean containsId(int id) {
+		for(Controller controller : devices.keySet()) { 
+			for(DeviceInfo device : devices.get(controller)) {
+				if(device.getId() == id) { 
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+	
+	public void ForEach(ForEach each) {
+		for(Controller controller : devices.keySet()) 
+		for(DeviceInfo device : devices.get(controller))
+				each.each(device);
+	}
 }

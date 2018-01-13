@@ -62,12 +62,15 @@ public class CANTalon extends WPI_TalonSRX {
 	 * @param speed - speed to set -> speed = RPM, Percent = +- 1  
 	 */
 	public void set(double setPoint) {
+		this.setPoint = setPoint;
+		
 		if(enabled) {
 			if(controlMode == ControlMode.Velocity) 
 				super.set(controlMode, setPoint * (sensorUnitsPerRotation / 600));
 			super.set(controlMode, setPoint);
 		}
 	}
+	
 	public double getSetPoint() { return setPoint; }
 	
 	public double getP() { return p; }

@@ -6,6 +6,8 @@ import java.util.HashMap;
 import org.usfirst.frc.team3555.Network.Packets.Packet;
 import org.usfirst.frc.team3555.Util.Controller;
 
+import edu.wpi.first.wpilibj.Timer;
+
 public class MonitorManager {
 	private HashMap<Controller, ArrayList<Monitor>> monitors;
 	
@@ -20,6 +22,8 @@ public class MonitorManager {
 		for(Controller controller : monitors.keySet()) 
 			for(Monitor monitor : monitors.get(controller))
 				monitor.update();
+
+		Timer.delay(.1);
 	}
 	
 	public void add(Monitor monitor) {

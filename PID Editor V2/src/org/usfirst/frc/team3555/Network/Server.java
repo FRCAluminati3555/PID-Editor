@@ -8,16 +8,21 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 import org.usfirst.frc.team3555.Util;
+import org.usfirst.frc.team3555.Util.Controller;
+import org.usfirst.frc.team3555.Util.Properties;
+import org.usfirst.frc.team3555.Network.Packets.BooleanPacket;
 import org.usfirst.frc.team3555.Network.Packets.Packet;
 import org.usfirst.frc.team3555.robot.Monitors.MonitorManager;
+
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  *	Robot Side will update the talon monitors in the robot 
  * @author Sam
  */
 public class Server extends Thread {
-	public static String host = "localhost";
-//	public static String host = "172.22.11.2";
+//	public static String host = "localhost";
+	public static String host = "172.22.11.2";
 	public static int port = 8080;
 	
 	private ServerSocket serverSocket;
@@ -53,6 +58,8 @@ public class Server extends Thread {
 		   
 		   readThread = new ReadClientThread(monitorManager, inputStream);
 		   readThread.start();
+		   
+		   send(new BooleanPacket(Controller.DriverStation, Properties.Enabled, DriverStation.getInstance().isEnabled(), 0));
 		   
 		   while(running) {
 			   //Send
