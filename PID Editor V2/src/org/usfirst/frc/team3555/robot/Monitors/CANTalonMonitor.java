@@ -19,10 +19,14 @@ public class CANTalonMonitor extends Monitor {
 	
 	@Override
 	public void update() {//Send data -> Speed, position, current
-		if(talon.getSensorUnitsPerRotation() > 0)
+		if(talon.getSensorUnitsPerRotation() > 0) {
 			sendPacket(Properties.Velocity, talon.getVelocityRPM());
+			sendPacket(Properties.Position, talon.getPositionRotations());
+		}
+		
 		sendPacket(Properties.Current, talon.getOutputCurrent());
 		sendPacket(Properties.Voltage, talon.getMotorOutputVoltage());
+		sendPacket(Properties.Temperature, talon.getTemperature());
 		
 		talon.set(talon.getSetPoint());
 	}

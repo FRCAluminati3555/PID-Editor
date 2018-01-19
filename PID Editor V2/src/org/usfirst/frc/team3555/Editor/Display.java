@@ -84,13 +84,14 @@ public class Display extends Application {
     		handler.getDeviceInfoManager().ForEach(device -> {
     			if(!(boolean) device.getInfo(Properties.Enabled))
     				handler.getDeviceInfoManager().sendData(device, Properties.Enabled, false);
+    			PIDLauncher.client.shutDown();
     		});
     	});
     	
     	Timeline loop = new Timeline();
         loop.setCycleCount(Timeline.INDEFINITE);
         
-        loop.getKeyFrames().add(new KeyFrame(Duration.seconds(.1), event -> {
+        loop.getKeyFrames().add(new KeyFrame(Duration.seconds(.0167), event -> {
         	handler.update();
         }));
         

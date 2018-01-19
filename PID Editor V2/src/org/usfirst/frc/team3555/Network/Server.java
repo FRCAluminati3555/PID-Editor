@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class Server extends Thread {
 //	public static String host = "localhost";
 	public static String host = "172.22.11.2";
+//	public static String host = "10.35.55.2";
 	public static int port = 8080;
 	
 	private ServerSocket serverSocket;
@@ -63,11 +64,19 @@ public class Server extends Thread {
 		   
 		   while(running) {
 			   //Send
+			   System.out.println(toSend.size());
 			   while(toSend.size() > 0) {
 				   Packet packet = toSend.remove(0);
 				   System.out.println("Server Sent: " + packet);
 				   packet.write(outputStream);
 			   }
+			   
+//			   if(toSend.size() > 0) {
+//				   Packet packet = toSend.remove(0);
+//				   System.out.println("Server Sent: " + packet);
+//				   packet.write(outputStream);
+//				   toSend.clear();
+//			   }
 			   
 			   try {
 				   sleep(100);

@@ -22,8 +22,6 @@ public class MonitorManager {
 		for(Controller controller : monitors.keySet()) 
 			for(Monitor monitor : monitors.get(controller))
 				monitor.update();
-
-		Timer.delay(.1);
 	}
 	
 	public void add(Monitor monitor) {

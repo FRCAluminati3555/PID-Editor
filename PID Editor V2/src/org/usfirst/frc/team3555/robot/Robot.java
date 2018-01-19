@@ -17,6 +17,7 @@ import org.usfirst.frc.team3555.robot.Monitors.CANTalonMonitor;
 import org.usfirst.frc.team3555.robot.Monitors.MonitorManager;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
 
 public class Robot extends IterativeRobot {
 	private Server server;
@@ -40,11 +41,13 @@ public class Robot extends IterativeRobot {
 	@Override 
 	public void teleopInit() {
 		server.send(new BooleanPacket(Controller.DriverStation, Properties.Enabled, true, 0));
+		server.send(new BooleanPacket(Controller.CANTalon, Properties.Enabled, false, 1));
 	}
 	
 	@Override
 	public void teleopPeriodic() {
 		monitorManager.update();
+		Timer.delay(.01);
 	}
 	
 	@Override

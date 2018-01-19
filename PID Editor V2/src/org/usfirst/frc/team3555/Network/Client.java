@@ -26,6 +26,7 @@ public class Client extends Thread {
 		
 		toSend = new ArrayList<>();
 		running = true;
+		setDaemon(true);
 	} 
 	
 	@Override
@@ -78,6 +79,7 @@ class ReadServerThread extends Thread {
 	   this.inputStream = inputStream;
 	   
 	   running = true;
+	   setDaemon(true);
    }
    
    @Override
@@ -93,11 +95,11 @@ class ReadServerThread extends Thread {
 			   e.printStackTrace();
 		   }
 		   
-		   try {
-			   sleep(10);
-		   } catch (InterruptedException e) {
-			   e.printStackTrace();
-		   }
+//		   try {
+//			   sleep(10);
+//		   } catch (InterruptedException e) {
+//			   e.printStackTrace();
+//		   }
 	   }
    }
    
