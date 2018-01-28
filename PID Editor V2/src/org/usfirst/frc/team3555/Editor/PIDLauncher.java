@@ -13,6 +13,6 @@ public class PIDLauncher {
 		manager.setClient(client);
 		client.start();
 		
-		Application.launch(Display.class, args); 
+		Application.launch(Display.class, args);
 	}
 }

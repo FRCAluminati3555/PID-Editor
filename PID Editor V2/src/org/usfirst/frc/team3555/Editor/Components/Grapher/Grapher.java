@@ -23,9 +23,11 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 
 public class Grapher extends Updatable {
+	public static final long startTime = System.currentTimeMillis();
+	
 	private HashMap<Properties, DataSeries> data;
 	
-	private int x;
+	private long x;
 	private boolean going;
 	private int scale = 25;
 	private int translate;
@@ -36,7 +38,7 @@ public class Grapher extends Updatable {
 	private double rightClickSensitivity;
 	private boolean dragging;
 	
-	private int resetPoint = 1000;
+//	private int resetPoint = 1000;
 
 	private LineChart<Number, Number> lineChart;
 	private ContextMenu rightClickMenu;
@@ -78,11 +80,16 @@ public class Grapher extends Updatable {
         rightClickMenu = new ContextMenu();
         
         //TODO Battery Voltage
-        generateRightClickMenu(Properties.SetPoint, Properties.Velocity, Properties.Position, Properties.Current, Properties.Voltage, Properties.Temperature);
-//        MenuItem exportItem = new MenuItem("Export");
-//        exportItem.setOnAction(e -> {
-//        	ExportData.export(lineChart.getTitle(), data);
-//        });
+        generateRightClickMenu(Properties.SetPoint, 
+        		Properties.LinearVelocity, Properties.LinearAcceleration, Properties.LinearPosition,
+        		Properties.RotationalVelocity, Properties.RotationalAcceleration, Properties.RotationalPosition,
+        		
+        		Properties.AnalogInPosition, Properties.AnalogInVelocity,
+        		Properties.Current, Properties.Voltage, Properties.Temperature);
+        MenuItem exportItem = new MenuItem("Export");
+        exportItem.setOnAction(e -> {
+        	ExportData.export(lineChart.getTitle(), data);
+        });
         
         MenuItem clearItem = new MenuItem("Clear");
         clearItem.setOnAction(e -> {
@@ -90,7 +97,7 @@ public class Grapher extends Updatable {
         });
         
         rightClickMenu.getItems().add(clearItem);
-//        rightClickMenu.getItems().add(exportItem);
+        rightClickMenu.getItems().add(exportItem);
         
 //        data.put("UpperBound", new DataSeries(handler, "UpperBound", id));
 //        data.put("LowerBound", new DataSeries(handler, "LowerBound", id));
@@ -168,7 +175,7 @@ public class Grapher extends Updatable {
 					translate = 0;
 		
 					data.forEach((s, d) -> {
-						d.updateData(x);
+						d.updateData((System.currentTimeMillis() - startTime) / 1000.0);
 					});
 					
 					if(scale < 20)
@@ -180,9 +187,9 @@ public class Grapher extends Updatable {
 					d.setSeriesData(scale, translate);
 				});
 				
-				if(x == resetPoint) {
-					clear();
-				}
+//				if(x == resetPoint) {
+//					clear();
+//				}
 			}
 		} else {
 //			System.out.println("Switch");

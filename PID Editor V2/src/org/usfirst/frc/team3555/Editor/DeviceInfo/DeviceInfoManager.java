@@ -65,7 +65,7 @@ public class DeviceInfoManager {
 	public void processPacket(Packet packet) {
 		for(DeviceInfo monitor : devices.get(packet.getController())) {
 			if(monitor.getId() == packet.getId()) {
-				System.out.println(packet);
+//				System.out.println(packet);
 				monitor.processPacket(packet);
 				return;
 			}

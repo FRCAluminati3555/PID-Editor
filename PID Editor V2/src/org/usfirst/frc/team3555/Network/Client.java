@@ -48,7 +48,7 @@ public class Client extends Thread {
 				//Send
 				while(toSend.size() > 0) {
 				   Packet packet = toSend.remove(0);
-				   System.out.println("Client Sent: " + packet);
+//				   System.out.println("Client Sent: " + packet);
 				   packet.write(outputStream);
 				}
 				
@@ -88,7 +88,7 @@ class ReadServerThread extends Thread {
 		   try {
 			   if(inputStream.available() > 0) {
 				   Packet packet = Util.genPacket(inputStream);
-				   System.out.println("Client Read: " + packet);
+//				   System.out.println("Client Read: " + packet);
 				   deviceManager.processPacket(packet);
 			   }
 		   } catch (IOException e) {

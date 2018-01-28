@@ -29,12 +29,21 @@ public class Util {
 	}
 	
 	public static enum Properties {
-		Enabled("Enabled", 0), Name("Name", 1),
-		SetPoint("Set Point", 2), Velocity("Velocity", 3), Current("Current", 4), Voltage("Voltage", 5), Position("Position", 6), Temperature("Temperature", 7),
-		P("P", 7), I("I", 8), D("D", 9), F("F", 10),
-		FeedBackSensor("Sensor", 11), SensorUnitsPerRotation("Sensor Units", 12),
-		ControlMode("Mode", 14),
-		ResetSensorPosition("Reset Postion", 14);
+		Enabled("Enabled"), Name("Name"),
+		SetPoint("Set Point"), 
+		
+		RotationalVelocity("Rotational Velocity"), LinearVelocity("LinearVelocity"),  
+		RotationalAcceleration("Rotational Acceleration"), LinearAcceleration("Linear Acceleration"),
+	
+		RotationalPosition("Rotational Position"), LinearPosition("Linear Position"), 
+		AnalogInPosition("Analog Position"), AnalogInVelocity("Analog Velocity"),
+		
+		Temperature("Temperature"), Current("Current"), Voltage("Voltage"),
+		
+		P("P"), I("I"), D("D"), F("F"),
+		FeedBackSensor("Sensor"), SensorUnitsPerRotation("Sensor Units"), DistancePerRotation("Distance Per Rotation"),
+		ControlMode("Mode"),
+		ResetSensorPosition("Reset Postion");
 		
 		public static Properties getProperty(int value) {
 			for(Properties property : values())
@@ -48,11 +57,14 @@ public class Util {
 			return null;
 		}
 		
+		private static int id;
+		private static int genId() { return id++; }
+		
 		private String name;
 		private int value;
-		private Properties(String name, int value) {
-			this.value = value;
+		private Properties(String name) {
 			this.name = name;
+			this.value = genId();
 		}
 		
 		public String toString() { return name; }

@@ -112,6 +112,6 @@ public class Display extends Application {
 			if(n instanceof PIDEditor) 
 				((PIDEditor) n).disableAll();
 	}
-
+	
 	public Stage getStage(){return stage;}
 }

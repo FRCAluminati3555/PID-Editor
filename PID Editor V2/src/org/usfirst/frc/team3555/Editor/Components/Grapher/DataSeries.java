@@ -34,8 +34,8 @@ public class DataSeries {
 		dataSeries.setName(name);
 	}
 	
-	public void updateData(int tick) {
-		previousData.add(new Point2D.Double(tick, (double) device.getInfo(property)));
+	public void updateData(double time) {
+		previousData.add(new Point2D.Double(time, (double) device.getInfo(property)));
 	}
 	
 	public void setSeriesData(int scale, int translate) {

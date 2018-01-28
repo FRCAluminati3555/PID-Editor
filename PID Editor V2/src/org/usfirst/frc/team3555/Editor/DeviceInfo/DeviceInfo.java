@@ -7,8 +7,6 @@ import org.usfirst.frc.team3555.Util.Properties;
 import org.usfirst.frc.team3555.Network.Client;
 import org.usfirst.frc.team3555.Network.Packets.Packet;
 
-import com.ctre.phoenix.motorcontrol.ControlMode;
-
 public class DeviceInfo {
 	protected Client client; 
 	
@@ -47,12 +45,23 @@ public class DeviceInfo {
 		values.put(Properties.I, 0.0);
 		values.put(Properties.Name, String.valueOf(id));
 		values.put(Properties.P, 0.0);
-		values.put(Properties.Position, 0.0);
+		
+		values.put(Properties.RotationalPosition, 0.0);
+		values.put(Properties.RotationalVelocity, 0.0);
+		values.put(Properties.RotationalAcceleration, 0.0);
+		
+		values.put(Properties.LinearPosition, 0.0);
+		values.put(Properties.LinearVelocity, 0.0);
+		values.put(Properties.LinearAcceleration, 0.0);
+		
+		values.put(Properties.AnalogInPosition, 0.0);
+		values.put(Properties.AnalogInVelocity, 0.0);
+		
 		values.put(Properties.ResetSensorPosition, false);
+		values.put(Properties.DistancePerRotation, 0.0);
 		values.put(Properties.SensorUnitsPerRotation, 0.0);
 		values.put(Properties.SetPoint, 0.0);
 		values.put(Properties.Temperature, 0.0);
-		values.put(Properties.Velocity, 0.0);
 		values.put(Properties.Voltage, 0.0);
 	}
 	

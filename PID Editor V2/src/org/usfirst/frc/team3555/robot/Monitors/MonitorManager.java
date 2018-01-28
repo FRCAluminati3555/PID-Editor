@@ -3,10 +3,8 @@ package org.usfirst.frc.team3555.robot.Monitors;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import org.usfirst.frc.team3555.Network.Packets.Packet;
 import org.usfirst.frc.team3555.Util.Controller;
-
-import edu.wpi.first.wpilibj.Timer;
+import org.usfirst.frc.team3555.Network.Packets.Packet;
 
 public class MonitorManager {
 	private HashMap<Controller, ArrayList<Monitor>> monitors;

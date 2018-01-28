@@ -67,8 +67,9 @@ public class Server extends Thread {
 			   System.out.println(toSend.size());
 			   while(toSend.size() > 0) {
 				   Packet packet = toSend.remove(0);
-				   System.out.println("Server Sent: " + packet);
-				   packet.write(outputStream);
+//				   System.out.println("Server Sent: " + packet);
+				   if(packet != null && outputStream != null)
+					   packet.write(outputStream);
 			   }
 			   
 //			   if(toSend.size() > 0) {
@@ -79,7 +80,7 @@ public class Server extends Thread {
 //			   }
 			   
 			   try {
-				   sleep(100);
+				   sleep(10);
 			   } catch (InterruptedException e) {
 				   e.printStackTrace();
 			   }
@@ -113,7 +114,7 @@ class ReadClientThread extends Thread {
 		   try {
 			   if(inputStream.available() > 0) {
 				   Packet packet = Util.genPacket(inputStream);
-				   System.out.println("Server Read: " + packet);
+//				   System.out.println("Server Read: " + packet);
 				   monitorManager.processPacket(packet);
 			   }
 		   } catch (IOException e) {

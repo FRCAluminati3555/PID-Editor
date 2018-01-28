@@ -174,7 +174,6 @@
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="217.0" minWidth="10.0" prefWidth="153.0" />
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="189.0" minWidth="10.0" prefWidth="137.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="125.0" minWidth="10.0" prefWidth="32.0" />
         </columnConstraints>
         <rowConstraints>
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -184,19 +183,12 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label prefHeight="30.0" prefWidth="137.0" text="Set Point Feedback" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+            <Label text="Feedback Device" GridPane.halignment="CENTER" GridPane.rowIndex="1">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <ChoiceBox id="SetPointFeedbackChooser" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <CheckBox id="SetPointFeedbackCheckBox" mnemonicParsing="false" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
-            <Label text="Feedback Device" GridPane.halignment="CENTER" GridPane.rowIndex="2">
-               <font>
-                  <Font size="16.0" />
-               </font>
-            </Label>
-            <ChoiceBox id="FeedBackDeviceChooser" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <ChoiceBox id="FeedBackDeviceChooser" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
             <Label text="Name" GridPane.halignment="CENTER">
                <font>
                   <Font size="16.0" />
@@ -207,19 +199,23 @@
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label text="Automatic" GridPane.columnIndex="2" GridPane.halignment="CENTER">
+            <Label text="Mode" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <Label text="Mode" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            <ChoiceBox id="ModeChooser" prefWidth="150.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+            <Label text="Codes Per Rev" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+               <font>
+                  <Font size="16.0" />
+               </font></Label>
+            <TextField id="CodesPerRevField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="Distance Per Rev" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <ChoiceBox id="ModeChooser" prefWidth="150.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-            <Label text="Codes Per Rev" GridPane.halignment="CENTER" GridPane.rowIndex="4" />
-            <TextField id="CodesPerRevField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <TextField id="DistancePerRevField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
          </children>
       </GridPane>
    </children>

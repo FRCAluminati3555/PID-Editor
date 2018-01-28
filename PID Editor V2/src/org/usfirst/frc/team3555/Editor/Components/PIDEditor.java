@@ -49,6 +49,8 @@ public class PIDEditor extends Pane {
 	private Button squareWaveButton;
 	private TextField frequencyField, setPoint1Field, setPoint2Field;
 	
+	private TextField distancePerRevField;
+	
 //	private RestrictionMonitor restrictionMonitor;
 //	private TextField upperRestrictionField, lowerRestrictionField;
 //	private Button motorRestrictionButton;
@@ -103,7 +105,8 @@ public class PIDEditor extends Pane {
 		
 		feedbackDeviceChooser = (ChoiceBox<FeedbackDevice>) (lookup("#FeedBackDeviceChooser"));
 		codesPerRevField = (TextField) (lookup("#CodesPerRevField"));
-
+		distancePerRevField = (TextField) (lookup("#DistancePerRevField"));
+		
 		feedbackDeviceChooser.getItems().addAll(FeedbackDevice.Analog, FeedbackDevice.QuadEncoder, FeedbackDevice.Tachometer);
 		feedbackDeviceChooser.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) -> {
 			disableAll();
@@ -112,6 +115,10 @@ public class PIDEditor extends Pane {
 		
 		codesPerRevField.textProperty().addListener((observable, oldValue, newValue) -> {
 			sendData(Properties.SensorUnitsPerRotation, (int) Util.getValue(codesPerRevField));
+		});
+		
+		distancePerRevField.textProperty().addListener((observable, oldValue, newValue) -> {
+			sendData(Properties.DistancePerRotation, Util.getValue(distancePerRevField));
 		});
 		
 //		upperRestrictionField = (TextField) (lookup("#UpperRestrictField"));
@@ -156,6 +163,7 @@ public class PIDEditor extends Pane {
 		modeChooser.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) -> {
 			disableAll();
 			sendData(Properties.ControlMode, modeChooser.getItems().get(newValue.intValue()).value);
+			sendData(Properties.SetPoint, Util.getValue(setPointField));
 		});
 		
 		modeChooser.getSelectionModel().selectFirst();
