@@ -10,6 +10,8 @@ import org.usfirst.frc.team3555.Editor.DeviceInfo.DeviceInfo;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
@@ -45,11 +47,20 @@ public class PIDEditor extends Pane {
 	
 	private Button applyButton;
 	private CheckBox autoApplyCheckBox;
-	
+
+	private CheckBox additiveCheckBox;
 	private Button squareWaveButton;
 	private TextField frequencyField, setPoint1Field, setPoint2Field;
 	
 	private TextField distancePerRevField;
+	
+	private Button limitSwitchButton;
+	
+	private ChoiceBox<LimitSwitchSource> forwardLimitSwitchSource, reverseLimitSwitchSource; 
+	private ChoiceBox<LimitSwitchNormal> forwardLimitSwitchNormal, reverseLimitSwitchNormal;
+	
+	private Button softLimitButton;
+	private TextField softLimitForward, softLimitReverse;
 	
 //	private RestrictionMonitor restrictionMonitor;
 //	private TextField upperRestrictionField, lowerRestrictionField;
@@ -98,6 +109,7 @@ public class PIDEditor extends Pane {
 		applyButton = (Button) (lookup("#ApplyButton"));
 		autoApplyCheckBox = (CheckBox) (lookup("#ApplyCheckBox"));
 		
+		additiveCheckBox = (CheckBox) (lookup("#AdditiveCheckBox"));
 		squareWaveButton = (Button) (lookup("#StartSquareWaveButton"));
 		frequencyField = (TextField) (lookup("#FrequencyField"));
 		setPoint1Field = (TextField) (lookup("#SetPoint1Field"));
@@ -106,6 +118,18 @@ public class PIDEditor extends Pane {
 		feedbackDeviceChooser = (ChoiceBox<FeedbackDevice>) (lookup("#FeedBackDeviceChooser"));
 		codesPerRevField = (TextField) (lookup("#CodesPerRevField"));
 		distancePerRevField = (TextField) (lookup("#DistancePerRevField"));
+		
+		limitSwitchButton = (Button) (lookup("#limitSwitchEnable"));
+		
+		forwardLimitSwitchSource = (ChoiceBox<LimitSwitchSource>) (lookup("#ForwardLimitSwitchSourceChooser"));
+		reverseLimitSwitchSource = (ChoiceBox<LimitSwitchSource>) (lookup("#ReverseLimitSwitchSourceChooser"));
+		
+		forwardLimitSwitchNormal = (ChoiceBox<LimitSwitchNormal>) (lookup("#ForwardLimitSwitchNormalChooser"));
+		reverseLimitSwitchNormal = (ChoiceBox<LimitSwitchNormal>) (lookup("#ReverseLimitSwitchNormalChooser"));
+		
+		softLimitButton = (Button) (lookup("#SoftLimitEnable"));
+		softLimitForward = (TextField) (lookup("#ForwardLimitField"));
+		softLimitReverse = (TextField) (lookup("#ReverseLimitField"));
 		
 		feedbackDeviceChooser.getItems().addAll(FeedbackDevice.Analog, FeedbackDevice.QuadEncoder, FeedbackDevice.Tachometer);
 		feedbackDeviceChooser.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) -> {
@@ -153,7 +177,7 @@ public class PIDEditor extends Pane {
         });
 		autoApplyCheckBox.setSelected(true);
 		
-		setPointField.setText(String.valueOf(handler.getDeviceInfoManager().getInfo(controller, Properties.SetPoint, id)));
+		setPointField.setText(String.valueOf(device.getInfo(Properties.SetPoint)));
 		pField.setText(String.valueOf(device.getInfo(Properties.P)));
 		iField.setText(String.valueOf(device.getInfo(Properties.I)));
 		dField.setText(String.valueOf(device.getInfo(Properties.D)));
@@ -199,6 +223,10 @@ public class PIDEditor extends Pane {
 				squareWaveMonitor.end();
 			}
 		});
+		
+		additiveCheckBox.selectedProperty().addListener((ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) -> {
+			squareWaveMonitor.setAdditive(newValue);
+        });
 		
 		applyButton.setOnAction(e -> {
 			if(!squareWaveMonitor.isMonitoring()) {
@@ -266,6 +294,57 @@ public class PIDEditor extends Pane {
 			if(autoApply) {
 				squareWaveMonitor.getSetPoints()[1] = Util.getValue(setPoint2Field);
 			}
+		});
+		
+		//Limit Switch
+		limitSwitchButton.setOnAction(e -> {
+			if(limitSwitchButton.getText().equals("Enable Limit Switch")) {
+				sendData(Properties.EnableLimitSwitch, true);
+				limitSwitchButton.setText("Disable Limit Switch");
+			} else {
+				sendData(Properties.EnableLimitSwitch, false);
+				limitSwitchButton.setText("Enable Limit Switch");
+			}
+		});
+		
+		forwardLimitSwitchNormal.getItems().addAll(LimitSwitchNormal.NormallyOpen, LimitSwitchNormal.NormallyClosed);
+		forwardLimitSwitchNormal.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) -> {
+			sendData(Properties.ForwardLimitSwitchNormal, forwardLimitSwitchNormal.getItems().get(newValue.intValue()).value);
+		});
+		
+		reverseLimitSwitchNormal.getItems().addAll(LimitSwitchNormal.NormallyOpen, LimitSwitchNormal.NormallyClosed);
+		reverseLimitSwitchNormal.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) -> {
+			sendData(Properties.ReverseLimitSwitchNormal, reverseLimitSwitchNormal.getItems().get(newValue.intValue()).value);
+		});
+		
+		
+		forwardLimitSwitchSource.getItems().addAll(LimitSwitchSource.FeedbackConnector, LimitSwitchSource.RemoteCANifier, LimitSwitchSource.RemoteTalonSRX);
+		forwardLimitSwitchSource.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) -> {
+			sendData(Properties.ForwardLimitSwtichSource, forwardLimitSwitchSource.getItems().get(newValue.intValue()).value);
+		});
+		
+		reverseLimitSwitchSource.getItems().addAll(LimitSwitchSource.FeedbackConnector, LimitSwitchSource.RemoteCANifier, LimitSwitchSource.RemoteTalonSRX);
+		reverseLimitSwitchSource.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) -> {
+			sendData(Properties.ReverseLimitSwtichSource, reverseLimitSwitchSource.getItems().get(newValue.intValue()).value);
+		});
+		
+		//Soft Limit
+		softLimitButton.setOnAction(e -> {
+			if(softLimitButton.getText().equals("Enable Soft Limit")) {
+				sendData(Properties.EnableSoftLimit, true);
+				softLimitButton.setText("Disable Soft Limit");
+			} else {
+				sendData(Properties.EnableSoftLimit, false);
+				softLimitButton.setText("Enable Soft Limit");
+			}
+		});
+		
+		softLimitForward.textProperty().addListener((observable, oldValue, newValue) -> {
+			sendData(Properties.SoftLimitForward, Util.getValue(softLimitForward));
+		});
+		
+		softLimitReverse.textProperty().addListener((observable, oldValue, newValue) -> {
+			sendData(Properties.SoftLimitReverse, Util.getValue(softLimitReverse));
 		});
 		
 		setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, new CornerRadii(10), BorderWidths.DEFAULT)));

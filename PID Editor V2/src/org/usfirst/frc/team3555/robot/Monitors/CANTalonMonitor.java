@@ -7,6 +7,7 @@ import org.usfirst.frc.team3555.Network.Packets.Packet;
 import org.usfirst.frc.team3555.robot.CANTalon;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 
 public class CANTalonMonitor extends Monitor {
 	private CANTalon talon;
@@ -107,6 +108,36 @@ public class CANTalonMonitor extends Monitor {
 		} else if(property == Properties.DistancePerRotation) {
 			talon.setDistancePerRotation((double) packet.getValue());
 			System.out.println("\n\nDistance Units " + (double) packet.getValue() + "\n");
+			
+		} else if(property == Properties.EnableLimitSwitch) {
+			talon.enableLimitSwitch(true);
+			System.out.println("\n\nLimit Switch Eanble" + (boolean) packet.getValue() + "\n");
+			
+		} else if(property == Properties.ForwardLimitSwtichSource) {
+			talon.setForwardLimitSwitchSource((int) packet.getValue());
+			System.out.println("\n\nForward Limit Switch Source" + (int) packet.getValue() + "\n");
+		} else if(property == Properties.ForwardLimitSwitchNormal) {
+			talon.setForwardLimitSwitchNormal((int) packet.getValue());
+			System.out.println("\n\nForward Limit Switch Normal " + (int) packet.getValue() + "\n");
+		}
+		
+		else if(property == Properties.ReverseLimitSwtichSource) {
+			talon.setReverseLimitSwitchSource((int) packet.getValue());
+			System.out.println("\n\nReverse Limit Switch Source " + (int) packet.getValue() + "\n");
+		} else if(property == Properties.ReverseLimitSwitchNormal) {
+			talon.setReverseLimitSwitchNormal((int) packet.getValue());
+			System.out.println("\n\nReverse Limit Switch Normal " + (int) packet.getValue() + "\n");
+		}
+		
+		else if(property == Properties.EnableSoftLimit) {
+			talon.enableSoftLimit(true);
+			System.out.println("\n\nSoft Limit Enable " + (boolean) packet.getValue() + "\n");
+		} else if(property == Properties.SoftLimitForward) {
+			talon.setForwardSoftLimitRotations((double) packet.getValue());
+			System.out.println("\n\nSoft Limit Forward " + (double) packet.getValue() + "\n");
+		} else if(property == Properties.SoftLimitReverse) {
+			talon.setReverseSoftLimitRotations((double) packet.getValue());
+			System.out.println("\n\nSoft Limit Reverse " + (double) packet.getValue() + "\n");
 		}
 	}
 

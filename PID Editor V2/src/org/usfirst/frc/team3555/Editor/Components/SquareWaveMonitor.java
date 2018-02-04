@@ -12,6 +12,9 @@ public class SquareWaveMonitor extends Updatable {
 	private int index;
 	
 	private boolean monitoring;
+	private boolean additive;
+	
+	private double addedPoint;
 	
 	public SquareWaveMonitor(Handler handler, DeviceInfo device) {
 		super(handler, device);
@@ -23,12 +26,17 @@ public class SquareWaveMonitor extends Updatable {
 	public void update() {
 		if(monitoring) {
 			if(System.currentTimeMillis() > lastTime + frequency) {
-				index++;
-				
-				if(index >= setPoints.length)
-					index = 0;
-				
-				handler.getDeviceInfoManager().sendData(device, Properties.SetPoint, setPoints[index]);
+				if(additive) {
+					addedPoint += setPoints[1];
+					handler.getDeviceInfoManager().sendData(device, Properties.SetPoint, addedPoint);
+				} else {
+					index++;
+					
+					if(index >= setPoints.length)
+						index = 0;
+					
+					handler.getDeviceInfoManager().sendData(device, Properties.SetPoint, setPoints[index]);
+				}
 				
 				lastTime = System.currentTimeMillis();
 			}
@@ -51,5 +59,10 @@ public class SquareWaveMonitor extends Updatable {
 	public boolean isMonitoring(){return monitoring;}
 	public double[] getSetPoints(){return setPoints;}
 
+	public void setAdditive(boolean additive) { 
+		addedPoint = setPoints[0];
+		this.additive = additive; 
+	}
+	
 	public void setFrequency(double frequency){this.frequency = frequency;}
 }

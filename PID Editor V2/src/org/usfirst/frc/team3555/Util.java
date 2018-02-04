@@ -42,7 +42,14 @@ public class Util {
 		
 		P("P"), I("I"), D("D"), F("F"),
 		FeedBackSensor("Sensor"), SensorUnitsPerRotation("Sensor Units"), DistancePerRotation("Distance Per Rotation"),
+
 		ControlMode("Mode"),
+		EnableLimitSwitch("Limit Switch Enable"), 
+		ForwardLimitSwtichSource("Forward Limit Switch Source"), ForwardLimitSwitchNormal("Forward Limit Switch Normal"),
+		ReverseLimitSwtichSource("Reverse Limit Switch Source"), ReverseLimitSwitchNormal("Reverse Limit Switch Normal"),
+		
+		EnableSoftLimit("Soft Limit Enable"), SoftLimitForward("Soft Limit Forward"), SoftLimitReverse("Soft Limit Reverse"),
+		
 		ResetSensorPosition("Reset Postion");
 		
 		public static Properties getProperty(int value) {

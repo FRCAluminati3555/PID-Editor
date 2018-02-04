@@ -64,7 +64,7 @@ public class Server extends Thread {
 		   
 		   while(running) {
 			   //Send
-			   System.out.println(toSend.size());
+//			   System.out.println(toSend.size());
 			   while(toSend.size() > 0) {
 				   Packet packet = toSend.remove(0);
 //				   System.out.println("Server Sent: " + packet);

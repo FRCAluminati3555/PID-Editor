@@ -2,6 +2,8 @@ package org.usfirst.frc.team3555.robot;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -36,6 +38,20 @@ public class CANTalon extends WPI_TalonSRX {
 		for(FeedbackDevice device : FeedbackDevice.values()) 
 			if(device.value == feedbackDeviceValue)
 				return device;
+		return null;
+	}
+	
+	public static LimitSwitchNormal getLimitSwitchNormal(int normal) {
+		for(LimitSwitchNormal limit : LimitSwitchNormal.values())
+			if(limit.value == normal)
+				return limit;
+		return null;
+	}
+	
+	public static LimitSwitchSource getLimitSwitchSource(int source) {
+		for(LimitSwitchSource limitSource : LimitSwitchSource.values()) 
+			if(limitSource.value == source)
+				return limitSource;
 		return null;
 	}
 	
@@ -101,9 +117,17 @@ public class CANTalon extends WPI_TalonSRX {
 	
 	private FeedbackDevice feedbackDevice;
 	private ControlMode controlMode;
+	
+	private LimitSwitchSource forwardLimitSwitchSource;
+	private LimitSwitchNormal forwardLimitSwitchNormal;
+	
+	private LimitSwitchSource reverseLimitSwitchSource;
+	private LimitSwitchNormal reverseLimitSwitchNormal;
 
 	private int sensorUnitsPerRotation;
 	private double distancePerRotation;
+	
+	private boolean quadrature;
 	
 	/**
 	 * Initializes a CANTalon with a complete clean slate. 
@@ -122,6 +146,7 @@ public class CANTalon extends WPI_TalonSRX {
 		
 		setCoast();
 		setSensorUnitsPerRotation(0);
+		setInverted(false);
 	}
 	
 	public CANTalon(String name, int deviceNumber) {
@@ -136,28 +161,30 @@ public class CANTalon extends WPI_TalonSRX {
 	public void set(double setPoint) {
 		this.setPoint = setPoint;
 		
-		if(enabled) 
-			super.set(controlMode, setPoint);
+		if(enabled) {
+			if(controlMode == ControlMode.Velocity) {
+				if(quadrature)
+					super.set(controlMode, quadRPMToNative(setPoint, sensorUnitsPerRotation));
+				else
+					super.set(controlMode, rpmToNative(setPoint, sensorUnitsPerRotation));
+			} else if(controlMode == ControlMode.Position) {
+				if(quadrature)
+					super.set(controlMode, quadRotationsToNative(setPoint, sensorUnitsPerRotation));
+				else
+					super.set(controlMode, rotationsToNative(setPoint, sensorUnitsPerRotation));
+			} else 
+				super.set(controlMode, setPoint);
+		}
 	}
 	
 	public void setVelocityRPM(double rpm) {
 		setControlMode(ControlMode.Velocity);
-		
-		if(feedbackDevice == FeedbackDevice.QuadEncoder) {
-			System.out.println("\n\nSet RPM: " + rpm);
-			set(quadRPMToNative(rpm, sensorUnitsPerRotation));
-		}
-		else 
-			set(rpmToNative(rpm, sensorUnitsPerRotation));
+		set(rpm);
 	}
 	
 	public void setPositionRotations(double rotations) {
 		setControlMode(ControlMode.Position);
-		
-		if(feedbackDevice == FeedbackDevice.QuadEncoder) 
-			set(quadRotationsToNative(rotations, sensorUnitsPerRotation));
-		else
-			set(rotationsToNative(rotations, sensorUnitsPerRotation));
+		set(rotations);
 	}
 	
 	public void setPositionDistance(double distance) {
@@ -167,10 +194,7 @@ public class CANTalon extends WPI_TalonSRX {
 	/**
 	 * Re-set the setpoint on the talon
 	 */
-	public void update() { 
-		set(setPoint); 
-	}
-	
+	public void update() { set(setPoint); }
 	public double getSetPoint() { return setPoint; }
 
 	public void setPID(double p, double i, double d) {
@@ -235,6 +259,11 @@ public class CANTalon extends WPI_TalonSRX {
 	public void setFeedbackDevice(FeedbackDevice feedbackDevice) {
 		this.feedbackDevice = feedbackDevice;
 		configSelectedFeedbackSensor(feedbackDevice, kPidIdx, kTimeoutMs);
+		
+		if(feedbackDevice == FeedbackDevice.QuadEncoder || feedbackDevice == FeedbackDevice.CTRE_MagEncoder_Relative) 
+			quadrature = true;
+		else
+			quadrature = false;
 	}
 	
 	public ControlMode getControlMode() { return controlMode; }
@@ -243,7 +272,7 @@ public class CANTalon extends WPI_TalonSRX {
 	
 	public double getVelocityRPM() { 
 		if(sensorUnitsPerRotation != 0) {
-			if(feedbackDevice == FeedbackDevice.QuadEncoder)
+			if(quadrature)
 				return nativeToQuadRPM(getNativeVelocity(), sensorUnitsPerRotation);
 			else 
 				return nativeToRPM(getNativeVelocity(), sensorUnitsPerRotation);
@@ -273,7 +302,7 @@ public class CANTalon extends WPI_TalonSRX {
 	}
 	
 	public double getNativeVelocity() { return getSelectedSensorVelocity(kPidIdx); }
-	public double getNativePosition() { return getSelectedSensorPosition(kPidIdx); }
+	public double getNativePosition() { return getSelectedSensorPosition(kPidIdx); } 
 	
 	public int getAnalogInNativeVelocity() { return getSensorCollection().getAnalogInVel(); }
 	public double getAnalogInRPMVelocity() { return nativeToRPM(getAnalogInNativeVelocity(), 1024); }
@@ -282,4 +311,57 @@ public class CANTalon extends WPI_TalonSRX {
 	public double getAnalogInRotationPosition() { return nativeToRotations(getAnalogInNativePosition(), 4096); }
 	
 	public void setSensorPosition(int sensorPos) { setSelectedSensorPosition(sensorPos, kPidIdx, kTimeoutMs); }
+
+	public void setForwardSoftLimitRotations(double rotations) {
+//		if(feedbackDevice == FeedbackDevice.QuadEncoder)
+//			configForwardSoftLimitThreshold((int) quadRotationsToNative(rotations, sensorUnitsPerRotation), kTimeoutMs);
+		configForwardSoftLimitThreshold((int) rotationsToNative(rotations, sensorUnitsPerRotation), kTimeoutMs);
+	}
+	
+	public void setReverseSoftLimitRotations(double rotations) {
+//		if(feedbackDevice == FeedbackDevice.QuadEncoder)
+//			configReverseSoftLimitThreshold((int) quadRotationsToNative(rotations, sensorUnitsPerRotation), kTimeoutMs);
+		configReverseSoftLimitThreshold((int) rotationsToNative(rotations, sensorUnitsPerRotation), kTimeoutMs);
+	}
+	
+	//Forward Limit Switch
+	public void setForwardLimitSwitchNormal(LimitSwitchNormal normal) {
+		this.forwardLimitSwitchNormal = normal;
+		
+		if(forwardLimitSwitchSource != null) {
+			configForwardLimitSwitchSource(forwardLimitSwitchSource, forwardLimitSwitchNormal, kTimeoutMs);
+		}
+	}
+	
+	public void setForwardLimitSwitchSource(LimitSwitchSource source) {
+		this.forwardLimitSwitchSource = source;
+		
+		if(forwardLimitSwitchNormal != null)
+			configForwardLimitSwitchSource(forwardLimitSwitchSource, forwardLimitSwitchNormal, kTimeoutMs);
+	}
+
+	public void setForwardLimitSwitchNormal(int normal) { setForwardLimitSwitchNormal(getLimitSwitchNormal(normal)); }
+	public void setForwardLimitSwitchSource(int source) { setForwardLimitSwitchSource(getLimitSwitchSource(source)); }
+	
+	//Reverse Limit Switch
+	public void setReverseLimitSwitchNormal(LimitSwitchNormal normal) {
+		this.reverseLimitSwitchNormal = normal;
+		
+		if(reverseLimitSwitchSource != null) 
+			configReverseLimitSwitchSource(reverseLimitSwitchSource, reverseLimitSwitchNormal, kTimeoutMs);
+	}
+	
+	public void setReverseLimitSwitchSource(LimitSwitchSource source) {
+		this.reverseLimitSwitchSource = source;
+		
+		if(reverseLimitSwitchNormal != null) 
+			configReverseLimitSwitchSource(reverseLimitSwitchSource, reverseLimitSwitchNormal, kTimeoutMs);
+	}
+	
+	public void setReverseLimitSwitchNormal(int normal) { setReverseLimitSwitchNormal(getLimitSwitchNormal(normal)); }
+	public void setReverseLimitSwitchSource(int source) { setReverseLimitSwitchSource(getLimitSwitchSource(source)); }
+	
+	//Enable
+	public void enableLimitSwitch(boolean enable) { overrideLimitSwitchesEnable(enable); }
+	public void enableSoftLimit(boolean enable) { overrideSoftLimitsEnable(enable); }
 }
