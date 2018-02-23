@@ -62,6 +62,8 @@ public class PIDEditor extends Pane {
 	private Button softLimitButton;
 	private TextField softLimitForward, softLimitReverse;
 	
+	private Button exportButton;
+	
 //	private RestrictionMonitor restrictionMonitor;
 //	private TextField upperRestrictionField, lowerRestrictionField;
 //	private Button motorRestrictionButton;
@@ -80,7 +82,8 @@ public class PIDEditor extends Pane {
 		this.handler = handler;
 		this.device = device;
 		this.controller = Controller.CANTalon;
-
+		this.id = device.getId();
+		
 		squareWaveMonitor = new SquareWaveMonitor(handler, device);
 //		restrictionMonitor = new RestrictionMonitor(handler, device);
 		
@@ -131,11 +134,17 @@ public class PIDEditor extends Pane {
 		softLimitForward = (TextField) (lookup("#ForwardLimitField"));
 		softLimitReverse = (TextField) (lookup("#ReverseLimitField"));
 		
-		feedbackDeviceChooser.getItems().addAll(FeedbackDevice.Analog, FeedbackDevice.QuadEncoder, FeedbackDevice.Tachometer);
+		exportButton = (Button) (lookup ("#Export"));
+		exportButton.setOnAction(e -> {
+			FileIO.exportInformation(this);
+		});
+		
+		feedbackDeviceChooser.getItems().addAll(FeedbackDevice.None, FeedbackDevice.Analog, FeedbackDevice.QuadEncoder, FeedbackDevice.Tachometer);
 		feedbackDeviceChooser.getSelectionModel().selectedIndexProperty().addListener((ObservableValue<? extends Number> observableValue, Number oldValue, Number newValue) -> {
 			disableAll();
 			sendData(Properties.FeedBackSensor, feedbackDeviceChooser.getItems().get(newValue.intValue()).value);
 		});
+		feedbackDeviceChooser.getSelectionModel().select(0);
 		
 		codesPerRevField.textProperty().addListener((observable, oldValue, newValue) -> {
 			sendData(Properties.SensorUnitsPerRotation, (int) Util.getValue(codesPerRevField));
@@ -393,7 +402,7 @@ public class PIDEditor extends Pane {
 //	}
 	
 	public void enable() {
-		if(!(boolean) handler.getDeviceInfoManager().getInfo(controller, Properties.Enabled, id)) {
+ 		if(!(boolean) handler.getDeviceInfoManager().getInfo(controller, Properties.Enabled, id)) {
 			enableButton.fire();
 		}
 	}
@@ -401,4 +410,45 @@ public class PIDEditor extends Pane {
 	private void sendData(Properties property, Object value) {
 		handler.getDeviceInfoManager().sendData(device, property, value);
 	}
+
+	//Getters
+	public int getControllerId() {
+		return device.getId();
+	}
+	
+	public SquareWaveMonitor getSquareWaveMonitor() { return squareWaveMonitor; }
+
+	public Label getNameLabel() { return nameLabel; }
+	
+	public TextField getSetPointField() { return setPointField; }
+	public TextField getpField() { return pField; }
+	public TextField getiField() { return iField; }   
+	public TextField getdField() { return dField; }
+	public TextField getfField() { return fField; }
+	
+	public ChoiceBox<ControlMode> getModeChooser() { return modeChooser; }
+	public Button getEnableButton() { return enableButton; }
+	public Button getApplyButton() { return applyButton; }
+	
+	public CheckBox getAutoApplyCheckBox() { return autoApplyCheckBox; }
+	public CheckBox getAdditiveCheckBox() { return additiveCheckBox; }
+	
+	public Button getSquareWaveButton() { return squareWaveButton; } 
+	public TextField getFrequencyField() { return frequencyField; }
+	public TextField getSetPoint1Field() { return setPoint1Field; }
+	public TextField getSetPoint2Field() { return setPoint2Field; }
+	
+	public TextField getDistancePerRevField() { return distancePerRevField; }
+	public Button getLimitSwitchButton() { return limitSwitchButton; }
+	public ChoiceBox<LimitSwitchSource> getForwardLimitSwitchSource() { return forwardLimitSwitchSource; }
+	public ChoiceBox<LimitSwitchSource> getReverseLimitSwitchSource() { return reverseLimitSwitchSource; }
+	public ChoiceBox<LimitSwitchNormal> getForwardLimitSwitchNormal() { return forwardLimitSwitchNormal; }
+	public ChoiceBox<LimitSwitchNormal> getReverseLimitSwitchNormal() { return reverseLimitSwitchNormal; }
+	public Button getSoftLimitButton() { return softLimitButton; }
+	public TextField getSoftLimitForward() { return softLimitForward; }
+	public TextField getSoftLimitReverse() { return softLimitReverse; }
+	
+	public ChoiceBox<FeedbackDevice> getFeedbackDeviceChooser() { return feedbackDeviceChooser; }
+	public TextField getCodesPerRevField() { return codesPerRevField; }
+	public Button getResetPosition() { return resetPosition; }
 }

@@ -81,6 +81,8 @@ public class CANTalonMonitor extends Monitor {
 		} else if(property == Properties.SetPoint) {
 			if(talon.getControlMode() == ControlMode.Velocity)
 				talon.setVelocityRPM((double) packet.getValue());
+			else if(talon.getDistancePerRotation() != 0 && talon.getControlMode() == ControlMode.Position)
+				talon.setPositionDistance((double) packet.getValue());
 			else
 				talon.set((double) packet.getValue());
 			System.out.println("\n\nSetPoint " + (double) packet.getValue() + "\n");

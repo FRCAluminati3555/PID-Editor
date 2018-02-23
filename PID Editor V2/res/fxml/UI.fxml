@@ -10,5 +10,7 @@
       <Button id="AddEditor" layoutX="14.0" layoutY="63.0" mnemonicParsing="false" text="Add Value Editor" />
       <TextField id="IDField" layoutX="125.0" layoutY="24.0" promptText="ID Of Device" />
       <Button id="AllButton" layoutX="14.0" layoutY="99.0" mnemonicParsing="false" text="Enable All" />
+      <Button id="ExportUI" layoutX="125.0" layoutY="63.0" mnemonicParsing="false" text="Export UI" />
+      <Button id="LoadUI" layoutX="99.0" layoutY="99.0" mnemonicParsing="false" text="Load UI" />
    </children>
 </Pane>

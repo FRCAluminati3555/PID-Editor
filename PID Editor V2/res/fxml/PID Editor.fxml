@@ -252,6 +252,11 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
+      <Button id="Export" layoutX="528.0" layoutY="439.0" mnemonicParsing="false" text="Export">
+         <font>
+            <Font size="16.0" />
+         </font>
+      </Button>
    </children>
    <padding>
       <Insets left="5.0" />

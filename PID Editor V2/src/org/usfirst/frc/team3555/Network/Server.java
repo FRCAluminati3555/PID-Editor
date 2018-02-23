@@ -21,10 +21,12 @@ import edu.wpi.first.wpilibj.DriverStation;
  * @author Sam
  */
 public class Server extends Thread {
-//	public static String host = "localhost";
-	public static String host = "172.22.11.2";
-//	public static String host = "10.35.55.2";
+//	public static String host = "localhost";//TEST
+	public static String host = "172.22.11.2";//USB
+//	public static String host = "10.35.55.2";//RADIO
 	public static int port = 8080;
+	
+	public static boolean test = false;
 	
 	private ServerSocket serverSocket;
 	private ReadClientThread readThread;
@@ -60,7 +62,12 @@ public class Server extends Thread {
 		   readThread = new ReadClientThread(monitorManager, inputStream);
 		   readThread.start();
 		   
-		   send(new BooleanPacket(Controller.DriverStation, Properties.Enabled, DriverStation.getInstance().isEnabled(), 0));
+		   if(!test)
+			   send(new BooleanPacket(Controller.DriverStation, Properties.Enabled, DriverStation.getInstance().isEnabled(), 0));
+		   else {
+			   System.out.println("Here");
+			   send(new BooleanPacket(Controller.DriverStation, Properties.Enabled, true, 0));
+		   }
 		   
 		   while(running) {
 			   //Send

@@ -1,0 +1,9 @@
+Set Point 50
+P 0.85
+I 0.004
+D 0.2
+F 0.0
+Sensor 0
+Mode 2
+Sensor Units 360.0
+Distance Per Rotation 0.0

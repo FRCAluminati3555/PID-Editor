@@ -1,14 +1,19 @@
 package org.usfirst.frc.team3555.Editor;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 import org.usfirst.frc.team3555.Util;
 import org.usfirst.frc.team3555.Util.Controller;
 import org.usfirst.frc.team3555.Util.Properties;
+import org.usfirst.frc.team3555.Editor.Components.FileIO;
 import org.usfirst.frc.team3555.Editor.Components.PIDEditor;
 import org.usfirst.frc.team3555.Editor.Components.Grapher.Grapher;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -30,6 +35,9 @@ public class Display extends Application {
 	private Button addEditorButton;
 	private Button allButton;
 	
+	private Button exportUIButton;
+	private Button loadUIButton;
+	
 	private TextField idField;
 	
 	@Override
@@ -49,24 +57,12 @@ public class Display extends Application {
     	
     	addEditorButton = (Button) (scene.lookup("#AddEditor"));
     	addEditorButton.setOnAction(e -> {
-    		int id = (int) Util.getValue(idField);
-    		if(!handler.getDeviceInfoManager().containsId(id))
-    			return;
-    		
-    		pane.getChildren().add(new PIDEditor(handler, handler.getDeviceInfoManager().getDeviceInfo(Controller.CANTalon, id)));
+    		addEditor((int) Util.getValue(idField));
     	});
     	
     	addGraphButton = (Button) (scene.lookup("#AddGraph"));
     	addGraphButton.setOnAction(e -> {
-    		int id = (int) Util.getValue(idField);
-    		if(!handler.getDeviceInfoManager().containsId(id))
-    			return;
-    		
-    		System.out.println("\n\n\n\n" + handler.getDeviceInfoManager().getDeviceInfo(Controller.CANTalon, id) + "\n\n\n\n\n");
-    		Grapher g = new Grapher(handler, handler.getDeviceInfoManager().getDeviceInfo(Controller.CANTalon, id));
-    		
-    		handler.getUpdater().add(g);
-    		pane.getChildren().add(g.getLineChart());
+    		addGraph((int) Util.getValue(idField));
     	});
     	
     	allButton = (Button) (scene.lookup("#AllButton"));
@@ -78,6 +74,24 @@ public class Display extends Application {
     			allButton.setText("Enable All");
     			disableAll();
     		}
+    	});
+    	
+    	exportUIButton = (Button) (scene.lookup("#ExportUI"));
+    	exportUIButton.setOnAction(e -> {
+    		try {
+				FileIO.exportDisplay(this);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+    	});
+    	
+    	loadUIButton = (Button) (scene.lookup("#LoadUI"));
+    	loadUIButton.setOnAction(e -> {
+    		try {
+				FileIO.readDisplay(this);
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
     	});
 
     	stage.setOnCloseRequest(e -> {
@@ -101,6 +115,56 @@ public class Display extends Application {
         stage.show();
 	}
 	
+	public PIDEditor addEditor(int id, double x, double y) {
+		PIDEditor editor = addEditor(id);
+		
+		if(editor == null)
+			return null;
+		
+		editor.setLayoutX(x);
+		editor.setLayoutY(y);
+		
+		return editor;
+	}
+	
+	public PIDEditor addEditor(int id) {
+//		int id = (int) Util.getValue(idField);
+		if(!handler.getDeviceInfoManager().containsId(id))
+			return null;
+		
+		PIDEditor editor = new PIDEditor(handler, handler.getDeviceInfoManager().getDeviceInfo(Controller.CANTalon, id));
+		FileIO.readInformation(editor);
+		
+		pane.getChildren().add(editor);
+		return editor;
+	}
+	
+	public Grapher addGrapher(int id, double x, double y) {
+		Grapher graph = addGraph(id);
+		
+		if(graph == null)
+			return null;
+		
+		graph.getLineChart().setLayoutX(x);
+		graph.getLineChart().setLayoutY(y);
+		
+		return graph;
+	}
+	
+	public Grapher addGraph(int id) {
+//		int id = (int) Util.getValue(idField);
+		if(!handler.getDeviceInfoManager().containsId(id))
+			return null;
+		
+//		System.out.println("\n\n\n\n" + handler.getDeviceInfoManager().getDeviceInfo(Controller.CANTalon, id) + "\n\n\n\n\n");
+		Grapher g = new Grapher(handler, handler.getDeviceInfoManager().getDeviceInfo(Controller.CANTalon, id));
+		
+		handler.getUpdater().add(g);
+		pane.getChildren().add(g.getLineChart());
+		
+		return g;
+	}
+	
 	public void enableAll() {
 		for(Node n : pane.getChildren()) 
 			if(n instanceof PIDEditor) 
@@ -111,6 +175,10 @@ public class Display extends Application {
 		for(Node n : pane.getChildren()) 
 			if(n instanceof PIDEditor) 
 				((PIDEditor) n).disableAll();
+	}
+	
+	public ObservableList<Node> getChilderen() {
+		return pane.getChildren();
 	}
 	
 	public Stage getStage(){return stage;}
